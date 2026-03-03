@@ -73,38 +73,134 @@
 
         <!-- SHIFT GUARD OVERLAY -->
         <div id="shift-guard-overlay"
-            class="fixed inset-0 z-[100000] bg-slate-900/50 backdrop-blur-xl flex items-center justify-center p-6 {{ $hasOpenShift ? 'hidden' : '' }}">
-            <div class="w-full max-w-md bg-white rounded-3xl shadow-2xl p-10 text-center animate-standard">
+            class="fixed inset-0 z-[100000] bg-slate-950/70 backdrop-blur-xl flex items-center justify-center p-6 {{ $hasOpenShift ? 'hidden' : '' }}">
+            <div class="w-full max-w-3xl bg-white rounded-3xl shadow-2xl overflow-hidden flex animate-standard">
+
+                {{-- Left: Branding Panel --}}
                 <div
-                    class="w-16 h-16 bg-gradient-to-br from-{{ $theme }}-500 to-{{ $theme }}-700 rounded-2xl flex items-center justify-center text-white mx-auto mb-6 shadow-lg shadow-{{ $theme }}-200/50">
-                    <svg class="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M13 10V3L4 14h7v7l9-11h-7z" />
-                    </svg>
-                </div>
-                <h2 class="text-2xl font-bold text-slate-900 mb-2">Start Your Shift</h2>
-                <p class="text-slate-500 text-sm mb-8 leading-relaxed">Enter the opening float amount to begin your terminal
-                    session.</p>
-                <div class="bg-slate-50 rounded-2xl p-6 border border-slate-100 mb-6">
-                    <label class="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-3">Opening
-                        Cash</label>
-                    <div class="relative">
-                        <span
-                            class="absolute left-4 top-1/2 -translate-y-1/2 text-xl font-bold text-slate-300">{{ $outletSettings['currency_symbol'] ?? '$' }}</span>
-                        <input type="number" id="guard-opening-cash"
-                            class="block w-full bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-{{ $theme }}-500/20 focus:border-{{ $theme }}-400 text-3xl font-bold text-slate-900 text-center py-4 placeholder:text-slate-200 transition-all"
-                            placeholder="0.00" step="0.01" autofocus>
+                    class="w-80 flex-shrink-0 bg-gradient-to-br from-{{ $theme }}-600 via-{{ $theme }}-700 to-{{ $theme }}-900 p-10 flex flex-col justify-between relative overflow-hidden">
+                    {{-- Decorative circles --}}
+                    <div class="absolute -top-12 -left-12 w-48 h-48 bg-white/5 rounded-full"></div>
+                    <div class="absolute -bottom-16 -right-8 w-56 h-56 bg-white/5 rounded-full"></div>
+                    <div class="absolute top-1/2 right-0 w-32 h-32 bg-white/5 rounded-full -translate-y-1/2"></div>
+
+                    {{-- Logo & App Name --}}
+                    <div class="relative z-10">
+                        <div
+                            class="w-14 h-14 bg-white/20 backdrop-blur rounded-2xl flex items-center justify-center mb-5 ring-1 ring-white/30">
+                            <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 7H6a2 2 0 00-2 2v9a2 2 0 002 2h9a2 2 0 002-2v-3M9 7V5a2 2 0 012-2h4l4 4v4a2 2 0 01-2 2h-2M9 7h6" />
+                            </svg>
+                        </div>
+                        <h1 class="text-white font-extrabold text-2xl leading-tight mb-1">e-POS Terminal</h1>
+                        <p class="text-white/60 text-sm font-medium">{{ Auth::user()->outlet->name ?? 'Main Outlet' }}</p>
+                    </div>
+
+                    {{-- Date / Time / Cashier --}}
+                    <div class="relative z-10 space-y-4">
+                        <div>
+                            <p class="text-white/40 text-[10px] font-semibold uppercase tracking-widest mb-1">Current Time
+                            </p>
+                            <p class="text-white text-3xl font-extrabold tabular-nums leading-none" id="guard-clock">--:--
+                            </p>
+                            <p class="text-white/50 text-xs font-medium mt-1" id="guard-date">--</p>
+                        </div>
+                        <div class="pt-4 border-t border-white/10">
+                            <p class="text-white/40 text-[10px] font-semibold uppercase tracking-widest mb-2">Logged In As
+                            </p>
+                            <div class="flex items-center gap-2.5">
+                                <div
+                                    class="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center text-white font-extrabold text-sm ring-1 ring-white/20">
+                                    {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                                </div>
+                                <div>
+                                    <p class="text-white text-sm font-bold leading-tight">{{ Auth::user()->name }}</p>
+                                    <p class="text-white/50 text-[11px] font-medium">
+                                        {{ Auth::user()->roles?->first()?->name ?? 'Cashier' }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <button onclick="posApp.openShiftFromGuard()" class="pos-btn-primary w-full !text-base">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M13 10V3L4 14h7v7l9-11h-7z" />
-                    </svg>
-                    Start Session
-                </button>
+
+                {{-- Right: Action Panel --}}
+                <div class="flex-grow p-10 flex flex-col justify-center">
+                    <div class="mb-8">
+                        <h2 class="text-2xl font-extrabold text-slate-900 leading-tight mb-2">Start Your Shift</h2>
+                        <p class="text-slate-500 text-sm leading-relaxed">Count your opening float and enter the amount
+                            below to begin your terminal session.</p>
+                    </div>
+
+                    {{-- Opening Cash Input --}}
+                    <div class="mb-6">
+                        <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-3">Opening
+                            Float Amount</label>
+                        <div class="relative">
+                            <span
+                                class="absolute left-4 top-1/2 -translate-y-1/2 text-lg font-bold text-slate-300 select-none">
+                                {{ $outletSettings['currency_symbol'] ?? 'RM' }}
+                            </span>
+                            <input type="number" id="guard-opening-cash"
+                                class="block w-full bg-slate-50 border-2 border-slate-200 rounded-2xl focus:ring-0 focus:border-{{ $theme }}-400 focus:bg-white text-4xl font-extrabold text-slate-900 text-center py-5 pl-12 pr-4 placeholder:text-slate-200 transition-all"
+                                placeholder="0.00" step="0.01" min="0" autofocus>
+                        </div>
+                        <p class="text-[11px] text-slate-400 font-medium mt-2 text-center">Enter 0.00 if starting with no
+                            cash</p>
+                    </div>
+
+                    {{-- Quick Amount Presets --}}
+                    <div class="grid grid-cols-4 gap-2 mb-8">
+                        @foreach([50, 100, 200, 500] as $preset)
+                            <button type="button"
+                                onclick="document.getElementById('guard-opening-cash').value = '{{ $preset }}.00'"
+                                class="py-2.5 rounded-xl border-2 border-slate-200 text-sm font-bold text-slate-600 hover:border-{{ $theme }}-300 hover:bg-{{ $theme }}-50 hover:text-{{ $theme }}-700 transition-all">
+                                {{ $outletSettings['currency_symbol'] ?? 'RM' }}{{ $preset }}
+                            </button>
+                        @endforeach
+                    </div>
+
+                    {{-- Start Session Button --}}
+                    <button onclick="posApp.openShiftFromGuard()"
+                        class="w-full py-4 bg-{{ $theme }}-600 hover:bg-{{ $theme }}-700 active:scale-[0.98] text-white font-bold text-base rounded-2xl transition-all duration-200 shadow-lg shadow-{{ $theme }}-200/60 flex items-center justify-center gap-3">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                        Begin Session
+                    </button>
+
+                    {{-- Switch User / Logout --}}
+                    <div class="mt-4 text-center">
+                        <button type="button" onclick="document.getElementById('pos-logout-form').submit()"
+                            class="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-rose-500 font-medium transition-colors group">
+                            <svg class="w-4 h-4 group-hover:text-rose-500 transition-colors" fill="none"
+                                stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                            </svg>
+                            Switch User / Logout
+                        </button>
+                    </div>
+                </div>
             </div>
+
+            {{-- Clock update script --}}
+            <script>
+                (function updateGuardClock() {
+                    const c = document.getElementById('guard-clock');
+                    const d = document.getElementById('guard-date');
+                    if (c) {
+                        const now = new Date();
+                        c.textContent = now.toLocaleTimeString('en-MY', { hour: '2-digit', minute: '2-digit', hour12: true });
+                        d.textContent = now.toLocaleDateString('en-MY', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+                    }
+                    setTimeout(updateGuardClock, 1000);
+                })();
+            </script>
         </div>
+
 
         <!-- Main Header -->
         <header
@@ -557,69 +653,69 @@
         {{-- ── STOCK & TRANSFER MODAL (Tabbed) ─────────────────────────── --}}
         {{-- ── STOCK & TRANSFER MODAL (Tabbed) ─────────────────────────── --}}
         <div id="transfer-modal" class="fixed inset-0 z-[200] hidden" role="dialog" aria-modal="true" x-data="{
-                                            tab: 'stock',
-                                            stockItems: [], stockLoading: true,
-                                            outlets: [],
-                                            productSearch: '', productSearchResults: [], selectedProduct: null,
-                                            transferOutletId: '', transferQty: '', transferNotes: '', transferring: false,
-                                            _searchTimer: null,
+                                                                tab: 'stock',
+                                                                stockItems: [], stockLoading: true,
+                                                                outlets: [],
+                                                                productSearch: '', productSearchResults: [], selectedProduct: null,
+                                                                transferOutletId: '', transferQty: '', transferNotes: '', transferring: false,
+                                                                _searchTimer: null,
 
 
-                                            async loadStock() {
-                                                this.stockLoading = true;
-                                                try {
-                                                    const r = await fetch(posApp.apiBaseUrl + '/pos/inventory/low-stock', { headers: { 'Authorization': 'Bearer ' + posApp.apiToken } });
-                                                    const d = await r.json();
-                                                    this.stockItems = d.data || [];
-                                                } catch(e) { console.error(e); }
-                                                this.stockLoading = false;
-                                            },
+                                                                async loadStock() {
+                                                                    this.stockLoading = true;
+                                                                    try {
+                                                                        const r = await fetch(posApp.apiBaseUrl + '/pos/inventory/low-stock', { headers: { 'Authorization': 'Bearer ' + posApp.apiToken } });
+                                                                        const d = await r.json();
+                                                                        this.stockItems = d.data || [];
+                                                                    } catch(e) { console.error(e); }
+                                                                    this.stockLoading = false;
+                                                                },
 
-                                            async loadOutlets() {
-                                                if (this.outlets.length) return;
-                                                try {
-                                                    const r = await fetch(posApp.apiBaseUrl + '/pos/outlets', { headers: { 'Authorization': 'Bearer ' + posApp.apiToken } });
-                                                    const d = await r.json();
-                                                    this.outlets = d.data || [];
-                                                } catch(e) { console.error(e); }
-                                            },
+                                                                async loadOutlets() {
+                                                                    if (this.outlets.length) return;
+                                                                    try {
+                                                                        const r = await fetch(posApp.apiBaseUrl + '/pos/outlets', { headers: { 'Authorization': 'Bearer ' + posApp.apiToken } });
+                                                                        const d = await r.json();
+                                                                        this.outlets = d.data || [];
+                                                                    } catch(e) { console.error(e); }
+                                                                },
 
-                                            async searchProducts() {
-                                                if (this.productSearch.length < 2) { this.productSearchResults = []; return; }
-                                                try {
-                                                    const r = await fetch(posApp.apiBaseUrl + '/pos/products?query=' + encodeURIComponent(this.productSearch), { headers: { 'Authorization': 'Bearer ' + posApp.apiToken } });
-                                                    const d = await r.json();
-                                                    this.productSearchResults = (d.data || []).slice(0, 8);
-                                                } catch(e) { console.error(e); this.productSearchResults = []; }
-                                            },
+                                                                async searchProducts() {
+                                                                    if (this.productSearch.length < 2) { this.productSearchResults = []; return; }
+                                                                    try {
+                                                                        const r = await fetch(posApp.apiBaseUrl + '/pos/products?query=' + encodeURIComponent(this.productSearch), { headers: { 'Authorization': 'Bearer ' + posApp.apiToken } });
+                                                                        const d = await r.json();
+                                                                        this.productSearchResults = (d.data || []).slice(0, 8);
+                                                                    } catch(e) { console.error(e); this.productSearchResults = []; }
+                                                                },
 
-                                            selectProduct(p) {
-                                                this.selectedProduct = p;
-                                                this.productSearch = p.name;
-                                                this.productSearchResults = [];
-                                            },
+                                                                selectProduct(p) {
+                                                                    this.selectedProduct = p;
+                                                                    this.productSearch = p.name;
+                                                                    this.productSearchResults = [];
+                                                                },
 
-                                            async submitTransfer() {
-                                                if (!this.transferOutletId) return Swal.fire('Missing', 'Please select a destination outlet.', 'warning');
-                                                if (!this.selectedProduct) return Swal.fire('Missing', 'Please select a product.', 'warning');
-                                                if (!this.transferQty || this.transferQty < 1) return Swal.fire('Missing', 'Enter a valid quantity.', 'warning');
-                                                this.transferring = true;
-                                                try {
-                                                    const res = await fetch(posApp.apiBaseUrl + '/pos/transfers', {
-                                                        method: 'POST',
-                                                        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + posApp.apiToken, 'Accept': 'application/json' },
-                                                        body: JSON.stringify({ to_outlet_id: this.transferOutletId, items: [{ product_id: this.selectedProduct.id, quantity: parseInt(this.transferQty) }], notes: this.transferNotes })
-                                                    });
-                                                    const data = await res.json();
-                                                    if (data.success) {
-                                                        Swal.fire('Done', 'Transfer request created successfully.', 'success');
-                                                        this.selectedProduct = null; this.productSearch = ''; this.transferQty = ''; this.transferNotes = ''; this.transferOutletId = '';
-                                                        this.tab = 'stock'; this.loadStock();
-                                                    } else { Swal.fire('Error', data.message, 'error'); }
-                                                } catch(e) { Swal.fire('Error', 'Failed to submit transfer.', 'error'); }
-                                                this.transferring = false;
-                                            }
-                                        }">
+                                                                async submitTransfer() {
+                                                                    if (!this.transferOutletId) return Swal.fire('Missing', 'Please select a destination outlet.', 'warning');
+                                                                    if (!this.selectedProduct) return Swal.fire('Missing', 'Please select a product.', 'warning');
+                                                                    if (!this.transferQty || this.transferQty < 1) return Swal.fire('Missing', 'Enter a valid quantity.', 'warning');
+                                                                    this.transferring = true;
+                                                                    try {
+                                                                        const res = await fetch(posApp.apiBaseUrl + '/pos/transfers', {
+                                                                            method: 'POST',
+                                                                            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + posApp.apiToken, 'Accept': 'application/json' },
+                                                                            body: JSON.stringify({ to_outlet_id: this.transferOutletId, items: [{ product_id: this.selectedProduct.id, quantity: parseInt(this.transferQty) }], notes: this.transferNotes })
+                                                                        });
+                                                                        const data = await res.json();
+                                                                        if (data.success) {
+                                                                            Swal.fire('Done', 'Transfer request created successfully.', 'success');
+                                                                            this.selectedProduct = null; this.productSearch = ''; this.transferQty = ''; this.transferNotes = ''; this.transferOutletId = '';
+                                                                            this.tab = 'stock'; this.loadStock();
+                                                                        } else { Swal.fire('Error', data.message, 'error'); }
+                                                                    } catch(e) { Swal.fire('Error', 'Failed to submit transfer.', 'error'); }
+                                                                    this.transferring = false;
+                                                                }
+                                                            }">
             <div class="fixed inset-0 bg-black/40 backdrop-blur-sm" onclick="posApp.closeTransferModal()"></div>
             <div class="fixed inset-0 flex items-center justify-center p-4 pointer-events-none">
                 <div
@@ -916,6 +1012,10 @@
                 </div>
             </div>
         </div>
+        {{-- Hidden logout form --}}
+        <form id="pos-logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
+            @csrf
+        </form>
     </div>
 
     @push('scripts')
@@ -1007,21 +1107,24 @@
                             document.getElementById('shift-card-sales-display').innerText = this.formatPrice(summary.card_total);
                             if (summary?.user_breakdown) {
                                 document.getElementById('shift-user-breakdown').innerHTML = summary.user_breakdown.map(u => `
-                                                                                                                    <tr><td class="px-5 py-3.5 text-sm font-medium text-slate-700">${u.user_name}</td><td class="px-5 py-3.5 text-sm font-semibold text-right text-emerald-600">${this.formatPrice(u.cash_total)}</td><td class="px-5 py-3.5 text-sm font-semibold text-right text-slate-900">${this.formatPrice(u.total_sales)}</td></tr>
-                                                                                                                `).join('');
+                                                                                                                                                            <tr><td class="px-5 py-3.5 text-sm font-medium text-slate-700">${u.user_name}</td><td class="px-5 py-3.5 text-sm font-semibold text-right text-emerald-600">${this.formatPrice(u.cash_total)}</td><td class="px-5 py-3.5 text-sm font-semibold text-right text-slate-900">${this.formatPrice(u.total_sales)}</td></tr>
+                                                                                                                                                        `).join('');
                             }
                         } else { if (guard) guard.classList.remove('hidden'); if (info) info.classList.add('hidden'); }
                     },
 
                     async openShiftFromGuard() {
+                        const _swalAboveGuard = { didOpen: (popup) => { popup.closest('.swal2-container').style.zIndex = '200000'; } };
                         const amount = document.getElementById('guard-opening-cash').value;
-                        if (!amount) return Swal.fire('Amount Required', 'Please enter opening float', 'warning');
+                        if (!amount) return Swal.fire({ title: 'Amount Required', text: 'Please enter opening float', icon: 'warning', ..._swalAboveGuard });
                         try {
                             const res = await fetch(`{{ route('api.v1.pos.shift.open') }}`, {
                                 method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + this.apiToken, 'Accept': 'application/json' },
                                 body: JSON.stringify({ opening_cash: amount })
                             });
-                            const data = await res.json(); if (data.success) location.reload(); else Swal.fire('Access Denied', data.message, 'error');
+                            const data = await res.json();
+                            if (data.success) location.reload();
+                            else Swal.fire({ title: 'Access Denied', text: data.message, icon: 'error', ..._swalAboveGuard });
                         } catch (e) { console.error(e); }
                     },
 
@@ -1091,14 +1194,14 @@
                                     const dateStr = date.toLocaleDateString('en-MY', { day: '2-digit', month: 'short' });
                                     const timeStr = date.toLocaleTimeString('en-MY', { hour: '2-digit', minute: '2-digit' });
                                     return `<tr onclick="posApp.viewReceipt(${JSON.stringify(s).replace(/"/g, '&quot;')})"
-                                                                                                class="hover:bg-indigo-50/50 cursor-pointer transition-colors border-b border-slate-50">
-                                                                                                <td class="px-4 py-3 font-bold text-slate-800 text-xs">#${s.id}</td>
-                                                                                                <td class="px-4 py-3 text-xs text-slate-500">${dateStr}<br><span class="text-slate-400">${timeStr}</span></td>
-                                                                                                <td class="px-4 py-3 text-xs font-medium text-slate-700">${customerName}</td>
-                                                                                                <td class="px-4 py-3 text-xs text-slate-500">${cashierName}</td>
-                                                                                                <td class="px-4 py-3"><span class="text-[10px] font-bold px-2 py-1 rounded-lg ${statusClass}">${s.status}</span></td>
-                                                                                                <td class="px-4 py-3 text-right text-sm font-bold text-slate-900">${this.formatPrice(s.total_amount)}</td>
-                                                                                            </tr>`;
+                                                                                                                                        class="hover:bg-indigo-50/50 cursor-pointer transition-colors border-b border-slate-50">
+                                                                                                                                        <td class="px-4 py-3 font-bold text-slate-800 text-xs">#${s.id}</td>
+                                                                                                                                        <td class="px-4 py-3 text-xs text-slate-500">${dateStr}<br><span class="text-slate-400">${timeStr}</span></td>
+                                                                                                                                        <td class="px-4 py-3 text-xs font-medium text-slate-700">${customerName}</td>
+                                                                                                                                        <td class="px-4 py-3 text-xs text-slate-500">${cashierName}</td>
+                                                                                                                                        <td class="px-4 py-3"><span class="text-[10px] font-bold px-2 py-1 rounded-lg ${statusClass}">${s.status}</span></td>
+                                                                                                                                        <td class="px-4 py-3 text-right text-sm font-bold text-slate-900">${this.formatPrice(s.total_amount)}</td>
+                                                                                                                                    </tr>`;
                                 }).join('');
                             } else {
                                 body.innerHTML = '<tr><td colspan="6" class="px-4 py-12 text-center text-slate-400 text-sm">No transactions found.</td></tr>';
@@ -1113,10 +1216,10 @@
                         const isVoid = sale.status === 'void';
                         const items = (sale.sale_items || []).map(i =>
                             `<div class="flex justify-between items-start text-xs py-1.5 border-b border-slate-100 last:border-0">
-                                                                                        <div><p class="font-medium text-slate-800">${i.product ? i.product.name : ('Item #' + i.product_id)}</p>
-                                                                                        <p class="text-slate-400">${i.quantity} &times; ${this.formatPrice(i.unit_price)}</p></div>
-                                                                                        <span class="font-semibold text-slate-900 ml-2">${this.formatPrice(i.subtotal)}</span>
-                                                                                    </div>`
+                                                                                                                                <div><p class="font-medium text-slate-800">${i.product ? i.product.name : ('Item #' + i.product_id)}</p>
+                                                                                                                                <p class="text-slate-400">${i.quantity} &times; ${this.formatPrice(i.unit_price)}</p></div>
+                                                                                                                                <span class="font-semibold text-slate-900 ml-2">${this.formatPrice(i.subtotal)}</span>
+                                                                                                                            </div>`
                         ).join('');
                         const customerName = sale.customer ? sale.customer.name : 'Walk-in Customer';
                         const cashierName = sale.user ? sale.user.name : '-';
@@ -1124,24 +1227,24 @@
                         const discount = parseFloat(sale.discount_amount || 0);
                         const tax = parseFloat(sale.tax_amount || 0);
                         document.getElementById('history-receipt-body').innerHTML = `
-                                                                                    <div class="w-full text-left space-y-4">
-                                                                                        <div class="text-center pb-3 border-b border-dashed border-slate-200">
-                                                                                            <p class="text-xs text-slate-400">${date}</p>
-                                                                                            <p class="text-lg font-bold text-slate-900 mt-1">#${sale.id}</p>
-                                                                                            <span class="text-[10px] font-bold px-2.5 py-1 rounded-lg ${isVoid ? 'bg-rose-100 text-rose-600' : 'bg-emerald-100 text-emerald-600'}">${sale.status.toUpperCase()}</span>
-                                                                                        </div>
-                                                                                        <div class="grid grid-cols-2 gap-2 text-xs">
-                                                                                            <div><p class="text-slate-400">Customer</p><p class="font-semibold text-slate-800">${customerName}</p></div>
-                                                                                            <div><p class="text-slate-400">Cashier</p><p class="font-semibold text-slate-800">${cashierName}</p></div>
-                                                                                        </div>
-                                                                                        <div class="space-y-0">${items || '<p class="text-xs text-slate-400 text-center py-4">No items</p>'}</div>
-                                                                                        <div class="pt-2 border-t border-dashed border-slate-200 space-y-1.5 text-xs">
-                                                                                            <div class="flex justify-between text-slate-500"><span>Subtotal</span><span>${this.formatPrice(sale.subtotal_amount || sale.total_amount)}</span></div>
-                                                                                            ${discount > 0 ? `<div class="flex justify-between text-rose-500"><span>Discount</span><span>-${this.formatPrice(discount)}</span></div>` : ''}
-                                                                                            ${tax > 0 ? `<div class="flex justify-between text-slate-500"><span>Tax</span><span>${this.formatPrice(tax)}</span></div>` : ''}
-                                                                                            <div class="flex justify-between font-bold text-slate-900 text-sm pt-1 border-t border-slate-200"><span>Total</span><span>${this.formatPrice(sale.total_amount)}</span></div>
-                                                                                        </div>
-                                                                                    </div>`;
+                                                                                                                            <div class="w-full text-left space-y-4">
+                                                                                                                                <div class="text-center pb-3 border-b border-dashed border-slate-200">
+                                                                                                                                    <p class="text-xs text-slate-400">${date}</p>
+                                                                                                                                    <p class="text-lg font-bold text-slate-900 mt-1">#${sale.id}</p>
+                                                                                                                                    <span class="text-[10px] font-bold px-2.5 py-1 rounded-lg ${isVoid ? 'bg-rose-100 text-rose-600' : 'bg-emerald-100 text-emerald-600'}">${sale.status.toUpperCase()}</span>
+                                                                                                                                </div>
+                                                                                                                                <div class="grid grid-cols-2 gap-2 text-xs">
+                                                                                                                                    <div><p class="text-slate-400">Customer</p><p class="font-semibold text-slate-800">${customerName}</p></div>
+                                                                                                                                    <div><p class="text-slate-400">Cashier</p><p class="font-semibold text-slate-800">${cashierName}</p></div>
+                                                                                                                                </div>
+                                                                                                                                <div class="space-y-0">${items || '<p class="text-xs text-slate-400 text-center py-4">No items</p>'}</div>
+                                                                                                                                <div class="pt-2 border-t border-dashed border-slate-200 space-y-1.5 text-xs">
+                                                                                                                                    <div class="flex justify-between text-slate-500"><span>Subtotal</span><span>${this.formatPrice(sale.subtotal_amount || sale.total_amount)}</span></div>
+                                                                                                                                    ${discount > 0 ? `<div class="flex justify-between text-rose-500"><span>Discount</span><span>-${this.formatPrice(discount)}</span></div>` : ''}
+                                                                                                                                    ${tax > 0 ? `<div class="flex justify-between text-slate-500"><span>Tax</span><span>${this.formatPrice(tax)}</span></div>` : ''}
+                                                                                                                                    <div class="flex justify-between font-bold text-slate-900 text-sm pt-1 border-t border-slate-200"><span>Total</span><span>${this.formatPrice(sale.total_amount)}</span></div>
+                                                                                                                                </div>
+                                                                                                                            </div>`;
                         const footer = document.getElementById('history-receipt-footer');
                         if (isVoid) {
                             footer.classList.add('hidden');
@@ -1185,8 +1288,8 @@
                         const res = await fetch(`${this.apiBaseUrl}/pos/customers?query=${q}`, { headers: { 'Authorization': 'Bearer ' + this.apiToken } });
                         const data = await res.json(); const custs = data.data || data;
                         document.getElementById('customer-search-results').innerHTML = custs.map(c => `
-                                                                                                            <div onclick="posApp.selectCustomer(${JSON.stringify(c).replace(/"/g, '&quot;')})" class="p-4 bg-slate-50 border border-slate-100 rounded-xl hover:bg-white hover:border-{{ $theme }}-200 hover:shadow-sm cursor-pointer transition-all"><p class="font-semibold text-sm text-slate-800">${c.name}</p><p class="text-xs text-slate-400 mt-0.5">${c.phone}</p></div>
-                                                                                                        `).join('');
+                                                                                                                                                    <div onclick="posApp.selectCustomer(${JSON.stringify(c).replace(/"/g, '&quot;')})" class="p-4 bg-slate-50 border border-slate-100 rounded-xl hover:bg-white hover:border-{{ $theme }}-200 hover:shadow-sm cursor-pointer transition-all"><p class="font-semibold text-sm text-slate-800">${c.name}</p><p class="text-xs text-slate-400 mt-0.5">${c.phone}</p></div>
+                                                                                                                                                `).join('');
                     },
                     selectCustomer(c) { this.cartCustomer = c; localStorage.setItem('pos_customer', JSON.stringify(c)); this.closeCustomerModal(); },
                     async createCustomer() {

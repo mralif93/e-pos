@@ -10,9 +10,23 @@ export default {
     "./resources/views/pos/**/*.blade.php",
   ],
   safelist: [
+    // Core colour utilities — bg, text, border, ring, shadow
     {
-      pattern: /(bg|text|border|ring|shadow)-(indigo|orange|rose|emerald|blue|green|red|slate|gray)-[0-9]+/,
-      variants: ['hover', 'focus', 'group-hover', 'active'],
+      pattern: /(bg|text|border|ring|shadow|outline)-(indigo|orange|rose|emerald|blue|violet|amber|teal|cyan|green|red|slate|gray)-(50|100|200|300|400|500|600|700|800|900)/,
+      variants: ['hover', 'focus', 'active', 'group-hover', 'disabled', 'focus-within'],
+    },
+    // Gradient utilities (from / via / to)
+    {
+      pattern: /(from|via|to)-(indigo|orange|rose|emerald|blue|violet|amber|teal|cyan|green|red|slate|gray)-(50|100|200|300|400|500|600|700|800|900)/,
+      variants: ['hover'],
+    },
+    // Shadow with opacity (e.g. shadow-indigo-200/50)
+    {
+      pattern: /shadow-(indigo|orange|rose|emerald|blue|violet|amber|teal|cyan|green|red|slate|gray)-(100|200|300|400|500)\/(30|40|50|60)/,
+    },
+    // Ring with opacity
+    {
+      pattern: /ring-(indigo|orange|rose|emerald|blue|violet|amber|teal|cyan|green|red|slate|gray)-(200|300|400|500)\/(20|30|40|50)/,
     },
   ],
   theme: {
