@@ -6,10 +6,12 @@
 @section('content')
     {{-- Back & Actions --}}
     <div class="flex items-center justify-between mb-6">
-        <a href="{{ route('admin.products.index') }}" class="btn btn-ghost btn-sm">
+        <a href="{{ route('admin.products.index') }}"
+            class="inline-flex items-center justify-center gap-1.5 rounded-lg text-sm font-medium transition-all active:scale-95 border focus:outline-none px-4 py-0.5 text-sm bg-transparent text-gray-600 border-gray-200 hover:bg-gray-100">
             <i class="hgi-stroke hgi-arrow-left-01 text-[18px]"></i> Back to Products
         </a>
-        <a href="{{ route('admin.products.edit', $product->id) }}" class="btn btn-secondary btn-sm">
+        <a href="{{ route('admin.products.edit', $product->id) }}"
+            class="inline-flex items-center justify-center gap-1.5 rounded-lg text-sm font-medium transition-all active:scale-95 border focus:outline-none px-4 py-0.5 text-sm bg-white text-gray-700 border-gray-300 hover:bg-gray-50 shadow-sm">
             <i class="hgi-stroke hgi-edit-02 text-[18px]"></i> Edit
         </a>
     </div>
@@ -51,7 +53,8 @@
                     <div>
                         <p class="text-xs text-gray-500 mb-1">Stock Level</p>
                         <p class="font-semibold {{ $product->stock_level <= 5 ? 'text-red-600' : 'text-gray-900' }}">
-                            {{ $product->stock_level }}</p>
+                            {{ $product->stock_level }}
+                        </p>
                     </div>
                     <div>
                         <p class="text-xs text-gray-500 mb-1">Total Sold</p>
@@ -87,7 +90,8 @@
                                     <td class="px-6 py-3 text-sm font-medium text-gray-800">{{ $price->outlet->name ?? '—' }}</td>
                                     <td class="px-6 py-3 text-sm text-gray-700">RM {{ number_format($price->price, 2) }}</td>
                                     <td class="px-6 py-3 text-sm text-gray-500">
-                                        {{ $price->compare_price ? 'RM ' . number_format($price->compare_price, 2) : '—' }}</td>
+                                        {{ $price->compare_price ? 'RM ' . number_format($price->compare_price, 2) : '—' }}
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -117,11 +121,13 @@
                             @foreach($recentSales as $sale)
                                 <tr class="hover:bg-gray-50">
                                     <td class="px-6 py-3 text-sm text-gray-600">
-                                        {{ \Carbon\Carbon::parse($sale->sale_date)->format('d M Y, H:i') }}</td>
+                                        {{ \Carbon\Carbon::parse($sale->sale_date)->format('d M Y, H:i') }}
+                                    </td>
                                     <td class="px-6 py-3 text-sm text-gray-600">{{ $sale->outlet_name }}</td>
                                     <td class="px-6 py-3 text-sm font-medium text-gray-800">{{ $sale->quantity }}</td>
                                     <td class="px-6 py-3 text-sm font-medium text-gray-800">RM
-                                        {{ number_format($sale->subtotal, 2) }}</td>
+                                        {{ number_format($sale->price * $sale->quantity, 2) }}
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>

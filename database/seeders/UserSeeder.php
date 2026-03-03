@@ -32,24 +32,27 @@ class UserSeeder extends Seeder
                 'email' => 'admin_' . strtolower(str_replace(' ', '', $outlet->name)) . '@example.com',
                 'role' => 'Admin',
                 'password' => bcrypt('password'),
+                'pin' => bcrypt('0000'),
                 'outlet_id' => $outlet->id,
             ]);
 
-            // Create a Manager user for each outlet
+            // Create a Manager user for each outlet (default PIN: 1234)
             User::factory()->create([
                 'name' => 'Manager ' . $outlet->name,
                 'email' => 'manager_' . strtolower(str_replace(' ', '', $outlet->name)) . '@example.com',
                 'role' => 'Manager',
                 'password' => bcrypt('password'),
+                'pin' => bcrypt('1234'),
                 'outlet_id' => $outlet->id,
             ]);
 
-            // Create a Cashier user for each outlet
+            // Create a Cashier user for each outlet (default PIN: 1234)
             User::factory()->create([
                 'name' => 'Cashier ' . $outlet->name,
                 'email' => 'cashier_' . strtolower(str_replace(' ', '', $outlet->name)) . '@example.com',
                 'role' => 'Cashier',
                 'password' => bcrypt('password'),
+                'pin' => bcrypt('1234'),
                 'outlet_id' => $outlet->id,
             ]);
 

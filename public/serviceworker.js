@@ -1,13 +1,25 @@
-const CACHE_NAME = 'epos-v2';
-const STATIC_ASSETS = [
+const CACHE_NAME = 'epos-v3-stable';
+
+// Core assets that must be available for the POS to function offline
+const PRECACHE_ASSETS = [
+    '/pos',
+    '/pos/checkout',
     '/manifest.json',
-    // External assets are cached on runtime to handle CORS/Opaque responses
+    '/assets/css/app.css', // Note: If using Vite, these names change. 
+    '/assets/js/app.js',   // We handle dynamic vite names in the fetch listener.
+    '/assets/fonts/inter.css',
+    '/assets/fonts/figtree.css',
+    '/assets/js/alpine.min.js',
+    '/assets/js/sweetalert2.js',
 ];
 
 self.addEventListener('install', (event) => {
     event.waitUntil(
         caches.open(CACHE_NAME).then((cache) => {
-            return cache.addAll(STATIC_ASSETS);
+            console.log('Pre-caching core POS assets');
+            return cache.addAll(PRECACHE_ASSETS).catch(err => {
+                console.warn('Some assets failed to pre-cache, they will be cached on first use.', err);
+            });
         })
     );
     self.skipWaiting();
@@ -19,6 +31,7 @@ self.addEventListener('activate', (event) => {
             return Promise.all(
                 cacheNames.map((cache) => {
                     if (cache !== CACHE_NAME) {
+                        console.log('Deleting old cache:', cache);
                         return caches.delete(cache);
                     }
                 })
@@ -28,89 +41,64 @@ self.addEventListener('activate', (event) => {
     self.clients.claim();
 });
 
+/**
+ * Strategy: 
+ * 1. Static Assets (CSS, JS, Fonts): Cache First or Stale-While-Revalidate
+ * 2. Navigation (HTML): Network First (fallback to cache)
+ * 3. API Calls: Network Only (or custom offline queue handling elsewhere)
+ * 4. Images: Cache First
+ */
 self.addEventListener('fetch', (event) => {
     const url = new URL(event.request.url);
 
-    // Skip non-http(s) requests (chrome-extension, etc)
-    if (!url.protocol.startsWith('http')) {
+    // Skip non-GET and non-http requests
+    if (event.request.method !== 'GET' || !url.protocol.startsWith('http')) {
         return;
     }
 
-    // Static Assets Cache
-    if (STATIC_ASSETS.includes(url.pathname)) {
+    // --- 1. API Calls: Network Only ---
+    if (url.pathname.startsWith('/api/')) {
+        return; // Let the browser handle normally
+    }
+
+    // --- 2. Navigation (HTML Pages): Network First ---
+    if (event.request.mode === 'navigate') {
         event.respondWith(
-            caches.match(event.request).then((response) => {
-                return response || fetch(event.request);
-            })
+            fetch(event.request)
+                .then(response => {
+                    const copy = response.clone();
+                    caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy));
+                    return response;
+                })
+                .catch(() => caches.match(event.request))
         );
         return;
     }
 
-    // Network First for everything else (Navigation, API)
+    // --- 3. Static Assets & Images: Cache First / Stale-While-Revalidate ---
     event.respondWith(
-        (async () => {
-            // Navigation Preload / Special Handling for Navigation
-            if (event.request.mode === 'navigate') {
-                // ... existing navigation logic ...
-                try {
-                    const networkResponse = await fetch(event.request);
-                    // Update Cache with new HTML
-                    if (event.request.method === 'GET') {
-                        const cache = await caches.open(CACHE_NAME);
-                        cache.put(event.request, networkResponse.clone());
-                    }
-                    return networkResponse;
-                } catch (error) {
-                    const cachedResponse = await caches.match(event.request); // Match exact request (e.g. /pos)
-                    if (cachedResponse) return cachedResponse;
-                    return caches.match('/manifest.json');
+        caches.match(event.request).then(cachedResponse => {
+            if (cachedResponse) {
+                // If it's a static asset (css/js/font), we use Stale-While-Revalidate
+                // to update the cache in background while serving fast from cache
+                if (url.pathname.includes('/assets/') || url.pathname.includes('/build/')) {
+                    fetch(event.request).then(networkResponse => {
+                        if (networkResponse.ok) {
+                            caches.open(CACHE_NAME).then(cache => cache.put(event.request, networkResponse));
+                        }
+                    });
                 }
+                return cachedResponse;
             }
 
-            // Only cache GET requests
-            if (event.request.method !== 'GET') {
-                return fetch(event.request);
-            }
-
-            try {
-                // Special handling for CDNs to avoid CORS errors
-                if (url.hostname.includes('cdn.tailwindcss.com') ||
-                    url.hostname.includes('fonts.googleapis.com') ||
-                    url.hostname.includes('cdn.jsdelivr.net')) {
-
-                    // Try cache first for these static assets
-                    const cachedResponse = await caches.match(event.request);
-                    if (cachedResponse) return cachedResponse;
-
-                    // Fetch with no-cors to allow caching opaque response
-                    const response = await fetch(event.request, { mode: 'no-cors' });
-                    const cache = await caches.open(CACHE_NAME);
-                    cache.put(event.request, response.clone());
-                    return response;
+            return fetch(event.request).then(networkResponse => {
+                // Cache successful responses for future use
+                if (networkResponse.ok || networkResponse.type === 'opaque') {
+                    const copy = networkResponse.clone();
+                    caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy));
                 }
-
-                // Standard Network First for other assets
-                const response = await fetch(event.request);
-
-                // Check if we received a valid response
-                if (!response || response.status !== 200 || response.type !== 'basic') {
-                    if (response && response.type === 'opaque') {
-                        const responseToCache = response.clone();
-                        const cache = await caches.open(CACHE_NAME);
-                        cache.put(event.request, responseToCache);
-                        return response;
-                    }
-                    return response;
-                }
-
-                const responseToCache = response.clone();
-                const cache = await caches.open(CACHE_NAME);
-                cache.put(event.request, responseToCache);
-
-                return response;
-            } catch (error) {
-                return caches.match(event.request);
-            }
-        })()
+                return networkResponse;
+            });
+        })
     );
 });

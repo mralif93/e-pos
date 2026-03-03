@@ -29,11 +29,11 @@ class PosCustomerTest extends TestCase
         ]);
 
         $response = $this->actingAs($user, 'sanctum')
-            ->getJson(route('api.pos.customers.search', ['query' => 'john']));
+            ->getJson(route('api.v1.pos.customers.search', ['query' => 'john']));
 
         $response->assertStatus(200)
             ->assertJsonFragment(['name' => 'John Doe'])
-            ->assertJsonCount(1);
+            ->assertJsonCount(1, 'data');
     }
 
     public function test_can_create_customer()
@@ -47,7 +47,7 @@ class PosCustomerTest extends TestCase
         $user = User::factory()->create(['outlet_id' => $outlet->id, 'role' => 'staff']);
 
         $response = $this->actingAs($user, 'sanctum')
-            ->postJson(route('api.pos.customers.create'), [
+            ->postJson(route('api.v1.pos.customers.create'), [
                 'name' => 'Jane Doe',
                 'phone' => '0987654321',
                 'email' => 'jane@example.com',

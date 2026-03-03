@@ -5,10 +5,10 @@
 
 @section('content')
     <div class="flex items-center justify-between mb-6">
-        <a href="{{ route('admin.customers.index') }}" class="btn btn-ghost btn-sm">
+        <a href="{{ route('admin.customers.index') }}" class="inline-flex items-center justify-center gap-1.5 rounded-lg text-sm font-medium transition-all active:scale-95 border focus:outline-none px-4 py-0.5 text-sm bg-transparent text-gray-600 border-gray-200 hover:bg-gray-100">
             <i class="hgi-stroke hgi-arrow-left-01 text-[18px]"></i> Back to Customers
         </a>
-        <a href="{{ route('admin.customers.edit', $customer->id) }}" class="btn btn-secondary btn-sm">
+        <a href="{{ route('admin.customers.edit', $customer->id) }}" class="inline-flex items-center justify-center gap-1.5 rounded-lg text-sm font-medium transition-all active:scale-95 border focus:outline-none px-4 py-0.5 text-sm bg-white text-gray-700 border-gray-300 hover:bg-gray-50 shadow-sm">
             <i class="hgi-stroke hgi-edit-02 text-[18px]"></i> Edit
         </a>
     </div>

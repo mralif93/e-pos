@@ -53,7 +53,7 @@ Route::get('/home', function () {
 
 Route::middleware(['auth:web,sanctum'])->group(function () {
     // Admin Routes
-    Route::prefix('admin')->name('admin.')->middleware(['can:access-admin', EnforceOutletRestriction::class])->group(function () {
+    Route::prefix('admin')->name('admin.')->middleware(['can:access-admin', EnforceOutletRestriction::class, 'outlet.session'])->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
         // Users

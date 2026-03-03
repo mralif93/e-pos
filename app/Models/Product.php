@@ -15,6 +15,7 @@ class Product extends Model
         'slug',
         'sku',
         'barcode',
+        'image',
         'description',
         'price',
         'cost',
@@ -22,6 +23,37 @@ class Product extends Model
         'is_active',
         'has_variants',
     ];
+
+    /**
+     * Get product initials for fallback display.
+     */
+    public function getInitialsAttribute(): string
+    {
+        return collect(explode(' ', $this->name))
+            ->map(fn($n) => mb_substr($n, 0, 1))
+            ->take(2)
+            ->join('') ?? 'P';
+    }
+
+    /**
+     * Get a consistent background color based on product name.
+     */
+    public function getFallbackColorAttribute(): string
+    {
+        $hash = md5($this->name);
+        $h = hexdec(substr($hash, 0, 2)) % 360;
+        return "hsl({$h}, 60%, 85%)";
+    }
+
+    /**
+     * Get a consistent text color based on product name.
+     */
+    public function getFallbackTextColorAttribute(): string
+    {
+        $hash = md5($this->name);
+        $h = hexdec(substr($hash, 0, 2)) % 360;
+        return "hsl({$h}, 70%, 30%)";
+    }
 
     public function category()
     {

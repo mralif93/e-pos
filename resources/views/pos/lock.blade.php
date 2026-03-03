@@ -140,8 +140,7 @@
                             return;
                         }
 
-                        // Check PIN
-                        // Check PIN
+                        // Check PIN via web route to ensure session is cleared
                         fetch('{{ route('pos.verify-pin') }}', {
                             method: 'POST',
                             headers: {
@@ -151,34 +150,29 @@
                             },
                             body: JSON.stringify({ pin: this.pinInput })
                         })
-                            .then(res => {
-                                if (res.status === 401) {
-                                    window.location.href = '{{ route('login') }}';
-                                    return;
-                                }
-                                return res.json().then(data => ({ status: res.status, ok: res.ok, data }));
-                            })
-                            .then(res => {
-                                if (res.ok) {
-                                    // Success - Redirect back to POS
-                                    window.location.href = '{{ route('pos.home') }}';
-                                } else {
-                                    // Fail
-                                    Swal.fire({
-                                        icon: 'error', title: 'Invalid PIN',
-                                        toast: true, position: 'top', timer: 1000, showConfirmButton: false,
-                                        customClass: { popup: 'rounded-xl shadow-lg' }
-                                    });
-                                    this.pinInput = '';
-                                }
-                            })
-                            .catch(err => {
-                                console.error(err);
-                                this.pinInput = '';
+                        .then(async res => {
+                            if (res.status === 401) {
+                                window.location.href = '{{ route('login') }}';
+                                return;
+                            }
+                            
+                            const data = await res.json();
+                            if (res.ok) {
+                                window.location.href = '{{ route('pos.home') }}';
+                            } else {
                                 Swal.fire({
-                                    icon: 'error', title: 'Error', text: 'Connection failed',
+                                    icon: 'error', title: data.message || 'Invalid PIN',
+                                    toast: true, position: 'top', timer: 1500, showConfirmButton: false,
+                                    customClass: { popup: 'rounded-xl shadow-lg' }
                                 });
-                            });
+                                this.pinInput = '';
+                            }
+                        })
+                        .catch(err => {
+                            console.error('Unlock error:', err);
+                            this.pinInput = '';
+                            Swal.fire({ icon: 'error', title: 'Connection Error', text: 'Failed to verify PIN.' });
+                        });
                     },
 
 

@@ -4,12 +4,27 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 class Sale extends Model
 {
-    use HasFactory;
+    use HasFactory, HasUuids;
+
+    /**
+     * Get the columns that should receive a unique identifier.
+     *
+     * @return array<int, string>
+     */
+    public function uniqueIds(): array
+    {
+        return ['uuid'];
+    }
+
+    public $incrementing = true;
+    protected $keyType = 'int';
 
     protected $fillable = [
+        'uuid',
         'outlet_id',
         'user_id',
         'customer_id',

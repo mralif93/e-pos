@@ -9,6 +9,8 @@ use App\Models\SaleItem;
 use App\Models\Payment;
 use App\Models\Product;
 use Illuminate\Support\Facades\DB;
+use App\Domains\Sales\DTOs\SaleData;
+use App\Domains\Sales\Actions\ProcessSaleAction;
 
 class OfflineSaleService
 {
@@ -20,6 +22,8 @@ class OfflineSaleService
         unset($cartData['items']);
 
         $draft = OfflineSaleDraft::create([
+            'id' => $data['id'] ?? (string) \Illuminate\Support\Str::uuid(),
+            'uuid' => $data['uuid'] ?? ($data['id'] ?? (string) \Illuminate\Support\Str::uuid()),
             'user_id' => $data['user_id'],
             'outlet_id' => $data['outlet_id'],
             'customer_id' => $data['customer_id'] ?? null,
@@ -32,7 +36,7 @@ class OfflineSaleService
             'points_earned' => $data['points_earned'] ?? 0,
             'points_redeemed' => $data['points_redeemed'] ?? 0,
             'discount_from_points' => $data['discount_from_points'] ?? 0,
-            'local_created_at' => now(),
+            'local_created_at' => $data['local_created_at'] ?? now(),
             'synced' => false,
         ]);
 
@@ -51,42 +55,44 @@ class OfflineSaleService
 
     public function syncDraft(OfflineSaleDraft $draft): Sale
     {
-        return DB::transaction(function () use ($draft) {
-            $sale = Sale::create([
-                'outlet_id' => $draft->outlet_id,
-                'user_id' => $draft->user_id,
-                'customer_id' => $draft->customer_id,
-                'total_amount' => $draft->total_amount,
-                'tax_amount' => $draft->tax_amount,
-                'discount_amount' => $draft->discount_amount,
-                'discount_reason' => $draft->discount_reason,
-                'status' => 'completed',
-                'points_earned' => $draft->points_earned,
-                'points_redeemed' => $draft->points_redeemed,
-                'discount_from_points' => $draft->discount_from_points,
-            ]);
+        // Check if already synced (prevent double sync)
+        if ($draft->synced) {
+            return $draft->syncedSale;
+        }
 
-            foreach ($draft->saleItems as $item) {
-                SaleItem::create([
-                    'sale_id' => $sale->id,
-                    'product_id' => $item->product_id,
-                    'quantity' => $item->quantity,
-                    'price' => $item->price,
-                ]);
-            }
+        // Convert Draft to SaleData DTO
+        $items = $draft->saleItems->map(function($item) {
+            return [
+                'product_id' => $item->product_id,
+                'quantity' => $item->quantity,
+                'price' => $item->price,
+            ];
+        })->toArray();
 
-            foreach ($draft->payments as $payment) {
-                Payment::create([
-                    'sale_id' => $sale->id,
-                    'amount' => $payment['amount'],
-                    'payment_method' => $payment['payment_method'],
-                ]);
-            }
+        $saleData = new SaleData(
+            outletId: $draft->outlet_id,
+            userId: $draft->user_id,
+            items: $items,
+            payments: $draft->payments,
+            totalAmount: (float) $draft->total_amount,
+            taxAmount: (float) $draft->tax_amount,
+            discountAmount: (float) $draft->discount_amount,
+            discountReason: $draft->discount_reason,
+            customerId: $draft->customer_id,
+            status: 'completed',
+            pointsToRedeem: $draft->points_redeemed
+        );
 
-            $draft->markAsSynced($sale->id);
+        // Execute core action
+        $action = new ProcessSaleAction();
+        $sale = $action->execute($saleData);
 
-            return $sale;
-        });
+        // Map the UUID from draft to the newly created sale
+        $sale->update(['uuid' => $draft->uuid]);
+
+        $draft->markAsSynced($sale->id);
+
+        return $sale;
     }
 
     public function syncAllPendingDrafts(): array

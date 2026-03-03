@@ -6,6 +6,10 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Pagination\Paginator;
 use App\Models\User;
+use Illuminate\Support\Facades\Event;
+use App\Domains\Sales\Events\SaleCompleted;
+use App\Domains\Sales\Listeners\RewardLoyaltyPoints;
+use App\Domains\Sales\Listeners\SubmitToLHDNEInvoice;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,6 +27,15 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Paginator::defaultView('vendor.pagination.tailwind');
+
+        // Event Registration
+        Event::listen(
+            SaleCompleted::class,
+            [
+                RewardLoyaltyPoints::class,
+                SubmitToLHDNEInvoice::class,
+            ]
+        );
 
         Gate::define('access-pos', function (User $user) {
             return in_array($user->role, ['Cashier', 'Manager', 'Admin', 'Super Admin']);

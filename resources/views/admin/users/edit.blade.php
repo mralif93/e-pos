@@ -37,21 +37,21 @@
                             <label class="block text-sm font-medium text-gray-700 mb-1">Full Name <span
                                     class="text-red-500">*</span></label>
                             <input type="text" name="name" value="{{ old('name', $user->name) }}" required
-                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                                class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-sm outline-none">
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Email Address <span
                                     class="text-red-500">*</span></label>
                             <input type="email" name="email" value="{{ old('email', $user->email) }}" required
-                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                                class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-sm outline-none">
                         </div>
 
                         <div class="md:col-span-2">
                             <label class="block text-sm font-medium text-gray-700 mb-1">Staff ID <span
                                     class="text-red-500">*</span></label>
                             <input type="text" name="staff_id" value="{{ old('staff_id', $user->staff_id) }}" required
-                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                                class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-sm outline-none">
                         </div>
 
                         <div class="md:col-span-2 mt-4">
@@ -62,7 +62,7 @@
                             <label class="block text-sm font-medium text-gray-700 mb-1">System Role <span
                                     class="text-red-500">*</span></label>
                             <select name="role" required
-                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 bg-white"
+                                class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-sm outline-none bg-white"
                                 {{ $user->id === auth()->id() ? 'disabled' : '' }}>
                                 <option value="Cashier" {{ old('role', $user->role) == 'Cashier' ? 'selected' : '' }}>Cashier
                                     (POS Only)</option>
@@ -80,7 +80,7 @@
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Assigned Outlet</label>
                             <select name="outlet_id"
-                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 bg-white">
+                                class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-sm outline-none bg-white">
                                 <option value="">All Outlets (HQ)</option>
                                 @foreach($outlets as $outlet)
                                     <option value="{{ $outlet->id }}" {{ old('outlet_id', $user->outlet_id) == $outlet->id ? 'selected' : '' }}>
@@ -108,30 +108,30 @@
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">New Password</label>
                             <input type="password" name="password" minlength="8"
-                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                                class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-sm outline-none">
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Confirm New Password</label>
                             <input type="password" name="password_confirmation" minlength="8"
-                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                                class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-sm outline-none">
                         </div>
 
                         <div class="md:col-span-2">
                             <label class="block text-sm font-medium text-gray-700 mb-1">POS PIN (4 Digits)</label>
                             <input type="text" name="pin" value="{{ old('pin', $user->pin) }}" maxlength="4" pattern="\d{4}"
                                 placeholder="------"
-                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 tracking-widest text-center">
+                                class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-sm outline-none tracking-widest text-center">
                             <p class="text-xs text-gray-500 mt-1">Leave blank if POS access is not required.</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="px-6 py-4 border-t border-gray-100 flex justify-end gap-3">
-                    <a href="{{ route('admin.users.index') }}" class="btn btn-secondary">
+                <div class="px-6 py-4 border-t border-gray-100 flex justify-end gap-3 items-center">
+                    <a href="{{ route('admin.users.index') }}" class="inline-flex items-center justify-center gap-1.5 rounded-lg text-sm font-medium transition-all active:scale-95 border focus:outline-none px-4 py-2.5 bg-white text-gray-700 border-gray-300 hover:bg-gray-50 shadow-sm">
                         Cancel
                     </a>
-                    <button type="submit" class="btn btn-primary">
+                    <button type="submit" class="inline-flex items-center justify-center gap-1.5 rounded-lg text-sm font-medium transition-all active:scale-95 border focus:outline-none px-4 py-2.5 bg-indigo-600 text-white border-indigo-600 hover:bg-indigo-700 shadow-sm shadow-indigo-200">
                         Update User
                     </button>
                 </div>

@@ -19,11 +19,14 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Controllers\Traits\PosOutletSettings;
-use App\Services\LoyaltyService;
 use App\Services\OfflineSaleService;
 use App\Services\ShiftService;
 use App\Services\DuitNowQRService;
 use App\Services\SSMCompanyLookupService;
+use App\Domains\Sales\DTOs\SaleData;
+use App\Domains\Sales\Actions\ProcessSaleAction;
+use App\Domains\Security\Actions\LogAuditAction;
+use App\Domains\Customers\Services\LoyaltyService;
 
 class PosController extends Controller
 {
@@ -45,8 +48,12 @@ class PosController extends Controller
         // Let's assume the user MUST have a PIN set to unlock their own session, OR use a manager PIN.
         // Simple implementation: Check against Auth user's PIN.
 
-        if ($user && (string) $user->pin === (string) $request->pin) {
+        $audit = new LogAuditAction();
+
+        if ($user && trim((string) $user->pin) === trim((string) $request->pin)) {
             session(['pos_locked' => false]);
+            session()->save();
+            $audit->execute('PIN_VERIFY_SUCCESS', "User #{$user->id} ({$user->name}) unlocked POS via own PIN.");
             return response()->json(['success' => true]);
         }
 
@@ -57,8 +64,14 @@ class PosController extends Controller
 
         if ($manager) {
             session(['pos_locked' => false]);
+            session()->save();
+            $audit->execute('PIN_VERIFY_SUCCESS', "User #{$user->id} unlocked POS via Manager PIN override (#{$manager->id} - {$manager->name}).");
             return response()->json(['success' => true]);
         }
+
+        $audit->execute('PIN_VERIFY_FAILED', "Failed POS unlock attempt for User #{$user->id}.", [
+            'attempted_pin' => $request->pin // Note: Use with caution, but for 4-digit POS pins, it helps detect pattern guessing
+        ]);
 
         return response()->json(['message' => 'Invalid PIN'], 403);
     }
@@ -68,8 +81,17 @@ class PosController extends Controller
         $user = auth()->user();
         $apiToken = $this->createPosToken($user, 10);
         $outletSettings = $this->getOutletSettings($user);
+        $apiBaseUrl = url('/api/v1');
 
-        return view('pos.app', ['apiToken' => $apiToken, 'outletSettings' => $outletSettings]);
+        $shiftService = new ShiftService();
+        $hasOpenShift = $shiftService->getCurrentShift($user->outlet_id) !== null;
+
+        return view('pos.app', [
+            'apiToken' => $apiToken, 
+            'outletSettings' => $outletSettings,
+            'apiBaseUrl' => $apiBaseUrl,
+            'hasOpenShift' => $hasOpenShift
+        ]);
     }
 
     public function checkout()
@@ -77,8 +99,13 @@ class PosController extends Controller
         $user = auth()->user();
         $apiToken = $this->createPosToken($user, 30);
         $outletSettings = $this->getOutletSettings($user);
+        $apiBaseUrl = url('/api/v1');
 
-        return view('pos.checkout', ['apiToken' => $apiToken, 'outletSettings' => $outletSettings]);
+        return view('pos.checkout', [
+            'apiToken' => $apiToken, 
+            'outletSettings' => $outletSettings,
+            'apiBaseUrl' => $apiBaseUrl
+        ]);
     }
 
     public function lock()
@@ -86,10 +113,15 @@ class PosController extends Controller
         $user = auth()->user();
         $apiToken = $this->createPosToken($user, 120);
         $outletSettings = $this->getOutletSettings($user);
+        $apiBaseUrl = url('/api/v1');
 
         session(['pos_locked' => true]);
 
-        return view('pos.lock', ['apiToken' => $apiToken, 'outletSettings' => $outletSettings]);
+        return view('pos.lock', [
+            'apiToken' => $apiToken, 
+            'outletSettings' => $outletSettings,
+            'apiBaseUrl' => $apiBaseUrl
+        ]);
     }
 
     public function searchProducts(Request $request)
@@ -204,83 +236,29 @@ class PosController extends Controller
             return response()->json(['message' => 'Unauthorized access to outlet.'], 403);
         }
 
-        $stockErrors = [];
-        foreach ($request->items as $item) {
-            $product = Product::find($item['product_id']);
-            $outletPrice = $product->prices()->where('outlet_id', $userOutletId)->first();
-            $availableStock = $outletPrice ? $outletPrice->stock_level : $product->stock_level;
-
-            if ($availableStock !== null && $availableStock < $item['quantity']) {
-                $stockErrors[] = "Insufficient stock for {$product->name}. Available: {$availableStock}";
-            }
-        }
-
-        if (!empty($stockErrors)) {
-            return response()->json(['message' => 'Stock validation failed', 'errors' => $stockErrors], 422);
-        }
-
-        $discount = $request->discount_amount ?? 0;
-        $finalTotal = $request->total_amount;
-
+        // 1. Initial validations (that don't require locking)
         $totalPayment = collect($request->payments)->sum('amount');
-        if ($totalPayment < $finalTotal - 0.01) {
+        if ($totalPayment < $request->total_amount - 0.01) {
             return response()->json(['message' => 'Insufficient payment amount.'], 422);
         }
 
-        $pointsToRedeem = $request->points_to_redeem ?? 0;
+        // 2. Prepare Data DTO
+        $saleData = SaleData::fromRequest($request);
 
-        DB::beginTransaction();
-
+        // 3. Execute core action
         try {
-            $sale = Sale::create([
-                'outlet_id' => $request->outlet_id,
-                'user_id' => $request->user_id,
-                'customer_id' => $request->customer_id,
-                'total_amount' => $request->total_amount,
-                'tax_amount' => $request->tax_amount,
-                'discount_amount' => $discount,
-                'discount_reason' => $request->discount_reason,
-                'status' => $request->status,
-            ]);
-
-            foreach ($request->items as $item) {
-                SaleItem::create([
-                    'sale_id' => $sale->id,
-                    'product_id' => $item['product_id'],
-                    'quantity' => $item['quantity'],
-                    'price' => $item['price'],
-                ]);
-            }
-
-            foreach ($request->payments as $payment) {
-                Payment::create([
-                    'sale_id' => $sale->id,
-                    'amount' => $payment['amount'],
-                    'payment_method' => $payment['payment_method'],
-                ]);
-            }
-
-            if ($request->customer_id) {
-                $loyaltyService = new LoyaltyService();
-                $pointsResult = $loyaltyService->processSalePoints($sale, $pointsToRedeem);
-
-                $sale->update([
-                    'points_earned' => $pointsResult['points_earned'],
-                    'points_redeemed' => $pointsResult['points_redeemed'],
-                    'discount_from_points' => $pointsResult['discount_from_points'],
-                ]);
-
-                $sale->refresh();
-            }
-
-            DB::commit();
+            $action = new ProcessSaleAction();
+            $sale = $action->execute($saleData);
 
             $sale->load(['saleItems.product', 'payments', 'customer', 'outlet', 'user']);
 
             return response()->json(['message' => 'Sale processed successfully', 'sale' => $sale], 201);
         } catch (\Exception $e) {
-            DB::rollBack();
-            return response()->json(['message' => 'Error processing sale', 'error' => $e->getMessage()], 500);
+            \Log::error('Sale Processing Failed: ' . $e->getMessage(), ['exception' => $e]);
+            return response()->json([
+                'message' => 'Error processing sale',
+                'error' => $e->getMessage()
+            ], 500);
         }
     }
 
@@ -318,7 +296,10 @@ class PosController extends Controller
             ->whereIn('role', ['Super Admin', 'Admin', 'Manager'])
             ->first();
 
+        $audit = new LogAuditAction();
+
         if (!$manager) {
+            $audit->execute('VOID_SALE_FAILED', "Failed manager PIN override during void sale attempt for Sale #{$id}.");
             return response()->json(['message' => 'Invalid Manager PIN'], 403);
         }
 
@@ -330,7 +311,15 @@ class PosController extends Controller
 
         DB::beginTransaction();
         try {
+            $oldStatus = $sale->status;
             $sale->update(['status' => 'void']);
+            
+            $audit->execute('VOID_SALE_SUCCESS', "Sale #{$id} voided by Manager #{$manager->id} ({$manager->name}).", [
+                'sale_id' => $id,
+                'manager_id' => $manager->id,
+                'old_status' => $oldStatus
+            ]);
+
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
@@ -570,16 +559,8 @@ class PosController extends Controller
 
     public function openShift(Request $request)
     {
-        $request->validate([
-            'opening_cash' => 'required|numeric|min:0',
-        ]);
-
+        $request->validate(['opening_cash' => 'required|numeric|min:0']);
         $user = auth()->user();
-
-        if (!$user->outlet_id) {
-            return response()->json(['message' => 'User has no outlet assigned'], 400);
-        }
-
         $shiftService = new ShiftService();
 
         try {
@@ -595,39 +576,44 @@ class PosController extends Controller
         $request->validate([
             'closing_cash' => 'required|numeric',
             'notes' => 'nullable|string',
+            'pin' => 'required|string|size:4'
         ]);
+
+        // Manager PIN Verification for security
+        $manager = User::where('pin', $request->pin)
+            ->whereIn('role', ['Manager', 'Admin', 'Super Admin'])
+            ->where('outlet_id', auth()->user()->outlet_id)
+            ->first();
+
+        if (!$manager) {
+            return response()->json(['message' => 'Invalid Manager PIN for authorization'], 403);
+        }
 
         $shift = Shift::findOrFail($id);
         $shiftService = new ShiftService();
 
-        $data = [
-            'closing_cash' => $request->closing_cash,
-            'notes' => $request->notes,
-        ];
-
-        $shift = $shiftService->closeShift($shift, $data);
-
-        return response()->json(['message' => 'Shift closed successfully', 'shift' => $shift]);
+        try {
+            $closedShift = $shiftService->closeShift($shift, array_merge(
+                $request->only('closing_cash', 'notes'),
+                ['closed_by' => $manager->id]
+            ));
+            return response()->json(['message' => 'Shift closed successfully', 'shift' => $closedShift]);
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 422);
+        }
     }
 
     public function getCurrentShift()
     {
         $user = auth()->user();
-
-        if (!$user->outlet_id) {
-            return response()->json(['message' => 'User has no outlet assigned', 'shift' => null], 400);
-        }
+        if (!$user->outlet_id) return response()->json(['message' => 'User has no outlet assigned', 'shift' => null], 400);
 
         $shiftService = new ShiftService();
+        $shift = $shiftService->getCurrentShift($user->outlet_id);
 
-        $shift = $shiftService->getCurrentShift($user->outlet_id, $user->id);
-
-        if (!$shift) {
-            return response()->json(['message' => 'No open shift found', 'shift' => null]);
-        }
+        if (!$shift) return response()->json(['message' => 'No open shift found', 'shift' => null]);
 
         $salesSummary = $shiftService->getShiftSalesSummary($shift);
-
         return response()->json([
             'shift' => $shift,
             'sales_summary' => $salesSummary,

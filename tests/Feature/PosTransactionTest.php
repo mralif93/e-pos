@@ -30,6 +30,7 @@ class PosTransactionTest extends TestCase
             'name' => 'Test Product',
             'slug' => 'test-product',
             'price' => 100,
+            'stock_level' => 100,
             'is_active' => true,
         ]);
 
@@ -38,6 +39,7 @@ class PosTransactionTest extends TestCase
             'user_id' => $user->id,
             'customer_id' => null,
             'total_amount' => 200,
+            'tax_amount' => 0,
             'status' => 'completed',
             'items' => [
                 [
@@ -56,11 +58,11 @@ class PosTransactionTest extends TestCase
 
         // 2. Act
         $response = $this->actingAs($user, 'sanctum')
-            ->postJson(route('api.pos.sales'), $payload);
+            ->postJson(route('api.v1.pos.sales'), $payload);
 
         // 3. Assert
         $response->assertStatus(201)
-            ->assertJsonStructure(['message', 'sale']);
+            ->assertJsonStructure(['message', 'data']);
 
         $this->assertDatabaseHas('sales', [
             'outlet_id' => $outlet->id,

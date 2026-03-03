@@ -52,11 +52,11 @@
                         </div>
 
                         <div class="flex gap-2">
-                            <a href="{{ route('admin.users.index') }}" class="btn btn-ghost btn-sm">
+                            <a href="{{ route('admin.users.index') }}" class="inline-flex items-center justify-center gap-1.5 rounded-lg text-sm font-medium transition-all active:scale-95 border focus:outline-none px-4 py-0.5 bg-transparent text-gray-600 border-gray-200 hover:bg-gray-100">
                                 <i class="hgi-stroke text-[20px] hgi-setup-01"></i>
                                 Reset
                             </a>
-                            <button type="submit" class="btn btn-primary btn-sm">
+                            <button type="submit" class="inline-flex items-center justify-center gap-1.5 rounded-lg text-sm font-medium transition-all active:scale-95 border focus:outline-none px-4 py-0.5 bg-indigo-600 text-white border-indigo-600 hover:bg-indigo-700 shadow-sm shadow-indigo-200">
                                 <i class="hgi-stroke text-[20px] hgi-filter"></i>
                                 Filter
                             </button>
@@ -69,7 +69,7 @@
 
     <!-- Table Card -->
     <div class="flex justify-end mb-4">
-        <a href="{{ route('admin.users.create') }}" class="btn btn-primary">
+        <a href="{{ route('admin.users.create') }}" class="inline-flex items-center justify-center gap-1.5 rounded-lg text-sm font-medium transition-all active:scale-95 border focus:outline-none px-4 py-0.5 bg-indigo-600 text-white border-indigo-600 hover:bg-indigo-700 shadow-sm shadow-indigo-200">
             <i class="hgi-stroke text-[20px] hgi-add-01"></i>
             Create User
         </a>

@@ -12,10 +12,10 @@ class OfflineSaleDraft extends Model
     protected $keyType = 'string';
     public $incrementing = false;
 
-    protected $fillable = [
-        'id',
-        'user_id',
-        'outlet_id',
+        protected $fillable = [
+            'id',
+            'uuid',
+            'user_id',        'outlet_id',
         'customer_id',
         'cart_data',
         'total_amount',

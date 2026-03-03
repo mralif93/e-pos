@@ -47,10 +47,10 @@ class PosSearchTest extends TestCase
         ProductOutletPrice::create(['product_id' => $product->id, 'outlet_id' => $this->outlet->id, 'price' => 10]);
 
         $response = $this->actingAs($this->user)
-            ->getJson(route('api.pos.products', ['query' => 'SKU-123']));
+            ->getJson(route('api.v1.pos.products', ['query' => 'SKU-123']));
 
         $response->assertStatus(200)
-            ->assertJsonCount(1)
+            ->assertJsonCount(1, 'data')
             ->assertJsonFragment(['name' => 'Test Product']);
     }
 
@@ -69,10 +69,10 @@ class PosSearchTest extends TestCase
         ProductOutletPrice::create(['product_id' => $product->id, 'outlet_id' => $this->outlet->id, 'price' => 10]);
 
         $response = $this->actingAs($this->user)
-            ->getJson(route('api.pos.products', ['query' => 'BAR-456']));
+            ->getJson(route('api.v1.pos.products', ['query' => 'BAR-456']));
 
         $response->assertStatus(200)
-            ->assertJsonCount(1)
+            ->assertJsonCount(1, 'data')
             ->assertJsonFragment(['name' => 'Test Product']);
     }
 }

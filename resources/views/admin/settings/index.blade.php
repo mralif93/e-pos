@@ -45,12 +45,12 @@
                         <label class="block text-sm font-medium text-gray-700 mb-1">App Name</label>
                         <input type="text" name="app_name" value="{{ config('app.name') }}"
                             placeholder="e.g. My POS System"
-                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                            class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-sm outline-none">
                         <p class="text-xs text-gray-400 mt-1">Displayed in page titles and receipt headers.</p>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Currency</label>
-                        <select name="currency" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 bg-white">
+                        <select name="currency" class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-sm outline-none bg-white">
                             <option value="MYR" {{ config('settings.currency', 'MYR') === 'MYR' ? 'selected' : '' }}>MYR – Malaysian Ringgit (RM)</option>
                             <option value="USD" {{ config('settings.currency') === 'USD' ? 'selected' : '' }}>USD – US Dollar ($)</option>
                             <option value="SGD" {{ config('settings.currency') === 'SGD' ? 'selected' : '' }}>SGD – Singapore Dollar (S$)</option>
@@ -60,7 +60,7 @@
                         <label class="block text-sm font-medium text-gray-700 mb-1">Tax Rate (%)</label>
                         <div class="relative">
                             <input type="number" name="tax_rate" value="{{ config('settings.tax_rate', 0) }}" step="0.01" min="0" max="100"
-                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 pr-10">
+                                class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-sm outline-none pr-10">
                             <span class="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-gray-400 font-medium">%</span>
                         </div>
                         <p class="text-xs text-gray-400 mt-1">Applied to all sales transactions (0 to disable).</p>
@@ -85,7 +85,7 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Default Low Stock Threshold</label>
                         <input type="number" name="low_stock_threshold" value="{{ config('settings.low_stock_threshold', 10) }}" min="0"
-                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                            class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-sm outline-none">
                         <p class="text-xs text-gray-400 mt-1">Products below this quantity trigger a low-stock alert.</p>
                     </div>
                     <div class="flex items-start gap-4 pt-6">
@@ -121,7 +121,7 @@
                         <label class="block text-sm font-medium text-gray-700 mb-1">Points Earned per RM 1 Spent</label>
                         <input type="number" name="loyalty_points_per_ringgit"
                             value="{{ config('settings.loyalty_points_per_ringgit', 1) }}" step="1" min="0"
-                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                            class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-sm outline-none">
                         <p class="text-xs text-gray-400 mt-1">Number of points awarded per RM 1 of spend.</p>
                     </div>
                     <div>
@@ -204,7 +204,7 @@
                         <input type="text" name="duitnow_merchant_id"
                             value="{{ config('settings.duitnow_merchant_id') }}"
                             placeholder="e.g. MY123456789"
-                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                            class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-sm outline-none">
                         <p class="text-xs text-gray-400 mt-1">Provided by your DuitNow payment provider.</p>
                     </div>
                     <div class="flex items-start gap-4 pt-6">
@@ -227,7 +227,7 @@
     {{-- Save Bar --}}
     <div class="mt-6 bg-white rounded-xl border border-gray-100 shadow-sm px-6 py-4 flex items-center justify-between">
         <p class="text-sm text-gray-500">Changes are saved immediately and take effect on the next page load.</p>
-        <button type="submit" class="btn btn-primary">
+        <button type="submit" class="inline-flex items-center justify-center gap-1.5 rounded-lg text-sm font-medium transition-all active:scale-95 border focus:outline-none px-4 py-0.5 bg-indigo-600 text-white border-indigo-600 hover:bg-indigo-700 shadow-sm shadow-indigo-200">
             <i class="hgi-stroke text-[20px] hgi-floppy-disk-01"></i>
             Save Settings
         </button>

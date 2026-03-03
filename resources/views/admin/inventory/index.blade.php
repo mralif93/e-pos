@@ -38,11 +38,11 @@
                         </div>
 
                         <div class="flex gap-2">
-                            <a href="{{ route('admin.inventory.index') }}" class="btn btn-ghost btn-sm">
+                            <a href="{{ route('admin.inventory.index') }}" class="inline-flex items-center justify-center gap-1.5 rounded-lg text-sm font-medium transition-all active:scale-95 border focus:outline-none px-4 py-0.5 bg-transparent text-gray-600 border-gray-200 hover:bg-gray-100">
                                 <i class="hgi-stroke hgi-setup-01 text-[20px]"></i>
                                 Reset
                             </a>
-                            <button type="submit" class="btn btn-primary btn-sm">
+                            <button type="submit" class="inline-flex items-center justify-center gap-1.5 rounded-lg text-sm font-medium transition-all active:scale-95 border focus:outline-none px-4 py-0.5 bg-indigo-600 text-white border-indigo-600 hover:bg-indigo-700 shadow-sm shadow-indigo-200">
                                 <i class="hgi-stroke hgi-filter text-[20px]"></i>
                                 Filter
                             </button>
@@ -55,7 +55,7 @@
 
     <!-- Adjust Button -->
     <div class="flex justify-end mb-4 mt-2">
-        <button onclick="openAdjustModal()" class="btn btn-primary">
+        <button onclick="openAdjustModal()" class="inline-flex items-center justify-center gap-1.5 rounded-lg text-sm font-medium transition-all active:scale-95 border focus:outline-none px-4 py-0.5 bg-indigo-600 text-white border-indigo-600 hover:bg-indigo-700 shadow-sm shadow-indigo-200">
             <i class="hgi-stroke text-[20px] hgi-settings-02"></i>
             Adjust Stock
         </button>
@@ -166,7 +166,7 @@
                     <div id="product-select-container">
                         <label class="block text-sm font-medium text-gray-700 mb-1">Select Product</label>
                         <select id="inventory_id"
-                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                            class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-sm outline-none">
                             <option value="">-- Choose Product --</option>
                             @foreach($products as $product)
                                 <option value="{{ $product->id }}">{{ $product->name }} ({{ $product->sku }})</option>
@@ -175,7 +175,7 @@
                     </div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Adjustment Type</label>
                     <select id="adjust_type" required
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                        class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-sm outline-none">
                         <option value="add">Add Stock</option>
                         <option value="remove">Remove Stock</option>
                         <option value="set">Set Stock</option>
@@ -184,7 +184,7 @@
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Quantity</label>
                 <input type="number" id="adjust_quantity" required min="0"
-                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                    class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-sm outline-none">
             </div>
             <div class="flex gap-3 pt-4">
                 <button type="button" onclick="closeAdjustModal()"

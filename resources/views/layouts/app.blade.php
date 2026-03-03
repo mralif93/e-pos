@@ -21,7 +21,7 @@
     <!-- PWA -->
     <link rel="manifest" href="/manifest.json">
     <script>
-        if ('serviceWorker' in navigator) {
+        if ('serviceWorker' in navigator && false) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('/serviceworker.js')
                     .then(registration => console.log('SW registered:', registration))

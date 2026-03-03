@@ -33,7 +33,7 @@ class PosHistoryTest extends TestCase
         ]);
 
         $response = $this->actingAs($user, 'sanctum')
-            ->getJson(route('api.pos.history'));
+            ->getJson(route('api.v1.pos.history'));
 
         $response->assertStatus(200)
             ->assertJsonFragment(['total_amount' => 100]) // Integer check
@@ -48,7 +48,7 @@ class PosHistoryTest extends TestCase
             'has_pos_access' => true,
         ]);
 
-        $user = User::factory()->create(['outlet_id' => $outlet->id, 'role' => 'staff']);
+        $user = User::factory()->create(['outlet_id' => $outlet->id, 'role' => 'Manager', 'pin' => '1234']);
 
         $sale = Sale::create([
             'outlet_id' => $outlet->id,
@@ -59,17 +59,17 @@ class PosHistoryTest extends TestCase
 
         // 1. Fail without PIN
         $this->actingAs($user, 'sanctum')
-            ->postJson(route('api.pos.void', $sale->id), [])
+            ->postJson(route('api.v1.pos.void', $sale->id), [])
             ->assertStatus(422);
 
         // 2. Fail with wrong PIN
         $this->actingAs($user, 'sanctum')
-            ->postJson(route('api.pos.void', $sale->id), ['pin' => '0000'])
+            ->postJson(route('api.v1.pos.void', $sale->id), ['pin' => '0000'])
             ->assertStatus(403);
 
-        // 3. Success with correct PIN (1234 placeholder)
+        // 3. Success with correct PIN
         $this->actingAs($user, 'sanctum')
-            ->postJson(route('api.pos.void', $sale->id), ['pin' => '1234'])
+            ->postJson(route('api.v1.pos.void', $sale->id), ['pin' => '1234'])
             ->assertStatus(200);
 
         $this->assertEquals('void', $sale->fresh()->status);

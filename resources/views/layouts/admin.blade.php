@@ -40,7 +40,7 @@
             <!-- Navigation -->
             <nav class="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
                 <a href="{{ route('admin.dashboard', request()->has('outlet_id') ? ['outlet_id' => request('outlet_id')] : []) }}"
-                    class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all
+                    class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all
                     {{ request()->routeIs('admin.dashboard') ? 'bg-indigo-600 text-white shadow-sm shadow-indigo-300' : 'text-gray-600 hover:bg-indigo-50 hover:text-indigo-700' }}">
                     <i class="hgi-stroke text-[18px] hgi-dashboard-square-01 shrink-0"></i>
                     <span>Dashboard</span>
@@ -50,7 +50,7 @@
                     <p class="px-3 text-[10px] font-bold text-gray-400 uppercase tracking-widest">Sales</p>
                 </div>
                 <a href="{{ route('admin.reports.sales', request()->has('outlet_id') ? ['outlet_id' => request('outlet_id')] : []) }}"
-                    class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all
+                    class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all
                     {{ request()->routeIs('admin.reports.*') ? 'bg-indigo-600 text-white shadow-sm shadow-indigo-300' : 'text-gray-600 hover:bg-indigo-50 hover:text-indigo-700' }}">
                     <i class="hgi-stroke text-[18px] hgi-chart-evaluation shrink-0"></i>
                     <span>Sales Reports</span>
@@ -60,31 +60,31 @@
                     <p class="px-3 text-[10px] font-bold text-gray-400 uppercase tracking-widest">Management</p>
                 </div>
                 <a href="{{ route('admin.users.index', request()->has('outlet_id') ? ['outlet_id' => request('outlet_id')] : []) }}"
-                    class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all
+                    class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all
                     {{ request()->routeIs('admin.users.*') ? 'bg-indigo-600 text-white shadow-sm shadow-indigo-300' : 'text-gray-600 hover:bg-indigo-50 hover:text-indigo-700' }}">
                     <i class="hgi-stroke text-[18px] hgi-user-star-01 shrink-0"></i>
                     <span>Users</span>
                 </a>
                 <a href="{{ route('admin.customers.index', request()->has('outlet_id') ? ['outlet_id' => request('outlet_id')] : []) }}"
-                    class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all
+                    class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all
                     {{ request()->routeIs('admin.customers.*') ? 'bg-indigo-600 text-white shadow-sm shadow-indigo-300' : 'text-gray-600 hover:bg-indigo-50 hover:text-indigo-700' }}">
                     <i class="hgi-stroke text-[18px] hgi-user-multiple-02 shrink-0"></i>
                     <span>Customers</span>
                 </a>
                 <a href="{{ route('admin.outlets.index', request()->has('outlet_id') ? ['outlet_id' => request('outlet_id')] : []) }}"
-                    class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all
+                    class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all
                     {{ request()->routeIs('admin.outlets.*') ? 'bg-indigo-600 text-white shadow-sm shadow-indigo-300' : 'text-gray-600 hover:bg-indigo-50 hover:text-indigo-700' }}">
                     <i class="hgi-stroke text-[18px] hgi-store-01 shrink-0"></i>
                     <span>Outlets</span>
                 </a>
                 <a href="{{ route('admin.products.index', request()->has('outlet_id') ? ['outlet_id' => request('outlet_id')] : []) }}"
-                    class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all
+                    class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all
                     {{ request()->routeIs('admin.products.*') ? 'bg-indigo-600 text-white shadow-sm shadow-indigo-300' : 'text-gray-600 hover:bg-indigo-50 hover:text-indigo-700' }}">
                     <i class="hgi-stroke text-[18px] hgi-package shrink-0"></i>
                     <span>Products</span>
                 </a>
                 <a href="{{ route('admin.categories.index', request()->has('outlet_id') ? ['outlet_id' => request('outlet_id')] : []) }}"
-                    class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all
+                    class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all
                     {{ request()->routeIs('admin.categories.*') ? 'bg-indigo-600 text-white shadow-sm shadow-indigo-300' : 'text-gray-600 hover:bg-indigo-50 hover:text-indigo-700' }}">
                     <i class="hgi-stroke text-[18px] hgi-grid-view shrink-0"></i>
                     <span>Categories</span>
@@ -93,13 +93,13 @@
                     <p class="px-3 text-[10px] font-bold text-gray-400 uppercase tracking-widest">Inventory</p>
                 </div>
                 <a href="{{ route('admin.inventory.index', request()->has('outlet_id') ? ['outlet_id' => request('outlet_id')] : []) }}"
-                    class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all
+                    class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all
                     {{ request()->routeIs('admin.inventory.*') ? 'bg-indigo-600 text-white shadow-sm shadow-indigo-300' : 'text-gray-600 hover:bg-indigo-50 hover:text-indigo-700' }}">
                     <i class="hgi-stroke text-[18px] hgi-warehouse shrink-0"></i>
                     <span>Inventory</span>
                 </a>
                 <a href="{{ route('admin.transfers.index', request()->has('outlet_id') ? ['outlet_id' => request('outlet_id')] : []) }}"
-                    class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all
+                    class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all
                     {{ request()->routeIs('admin.transfers.*') ? 'bg-indigo-600 text-white shadow-sm shadow-indigo-300' : 'text-gray-600 hover:bg-indigo-50 hover:text-indigo-700' }}">
                     <i class="hgi-stroke text-[18px] hgi-arrow-left-right shrink-0"></i>
                     <span>Transfers</span>
@@ -109,13 +109,13 @@
                     <p class="px-3 text-[10px] font-bold text-gray-400 uppercase tracking-widest">Operations</p>
                 </div>
                 <a href="{{ route('admin.shifts.index', request()->has('outlet_id') ? ['outlet_id' => request('outlet_id')] : []) }}"
-                    class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all
+                    class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all
                     {{ request()->routeIs('admin.shifts.*') ? 'bg-indigo-600 text-white shadow-sm shadow-indigo-300' : 'text-gray-600 hover:bg-indigo-50 hover:text-indigo-700' }}">
                     <i class="hgi-stroke text-[18px] hgi-calendar-01 shrink-0"></i>
                     <span>Shifts</span>
                 </a>
                 <a href="{{ route('admin.settings.index', request()->has('outlet_id') ? ['outlet_id' => request('outlet_id')] : []) }}"
-                    class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all
+                    class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all
                     {{ request()->routeIs('admin.settings.*') ? 'bg-indigo-600 text-white shadow-sm shadow-indigo-300' : 'text-gray-600 hover:bg-indigo-50 hover:text-indigo-700' }}">
                     <i class="hgi-stroke text-[18px] hgi-settings-01 shrink-0"></i>
                     <span>Settings</span>
@@ -137,7 +137,7 @@
                     <!-- Outlet Switcher Badge -->
                     @php
                         $outlets = \App\Models\Outlet::orderBy('name')->get();
-                        $selectedOutletId = request('outlet_id');
+                        $selectedOutletId = request('outlet_id'); // middleware merges session value here
                         $selectedOutlet = $outlets->firstWhere('id', $selectedOutletId);
                         $currentOutletName = $selectedOutlet ? $selectedOutlet->name : 'All Outlets';
                     @endphp
@@ -147,7 +147,7 @@
                             <!-- Badge Trigger Button for Super Admin -->
                             <button id="outletSwitcherBtn" type="button"
                                 class="flex items-center gap-2 h-[38px] px-3.5 rounded-xl border transition-all focus:outline-none
-                                            {{ $selectedOutletId ? 'bg-indigo-600 border-indigo-600 text-white shadow-sm shadow-indigo-300 hover:bg-indigo-700' : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50 shadow-sm' }}">
+                                                    {{ $selectedOutletId ? 'bg-indigo-600 border-indigo-600 text-white shadow-sm shadow-indigo-300 hover:bg-indigo-700' : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50 shadow-sm' }}">
                                 <i class="hgi-stroke hgi-building-03 text-[15px] shrink-0"></i>
                                 <span class="text-sm font-semibold max-w-[120px] truncate">{{ $currentOutletName }}</span>
                                 @if($selectedOutletId)
@@ -192,11 +192,14 @@
                                                 <input type="hidden" name="{{ $key }}" value="{{ $value }}">
                                             @endif
                                         @endforeach
+                                        {{-- Explicit empty value clears the session outlet --}}
+                                        <input type="hidden" name="outlet_id" value="">
                                         <button type="submit"
                                             class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left transition-all
-                                                        {{ !$selectedOutletId ? 'bg-indigo-50 text-indigo-700' : 'text-gray-700 hover:bg-gray-50' }}">
-                                            <div class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0
-                                                            {{ !$selectedOutletId ? 'bg-indigo-600' : 'bg-gray-100' }}">
+                                                                {{ !$selectedOutletId ? 'bg-indigo-50 text-indigo-700' : 'text-gray-700 hover:bg-gray-50' }}">
+                                            <div
+                                                class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0
+                                                                    {{ !$selectedOutletId ? 'bg-indigo-600' : 'bg-gray-100' }}">
                                                 <i
                                                     class="hgi-stroke hgi-grid-view text-sm {{ !$selectedOutletId ? 'text-white' : 'text-gray-400' }}"></i>
                                             </div>
@@ -225,10 +228,10 @@
                                             <input type="hidden" name="outlet_id" value="{{ $outlet->id }}">
                                             <button type="submit"
                                                 class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left transition-all
-                                                                        {{ $selectedOutletId == $outlet->id ? 'bg-indigo-50 text-indigo-700' : 'text-gray-700 hover:bg-gray-50' }}">
+                                                                                        {{ $selectedOutletId == $outlet->id ? 'bg-indigo-50 text-indigo-700' : 'text-gray-700 hover:bg-gray-50' }}">
                                                 <div
                                                     class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0
-                                                                            {{ $selectedOutletId == $outlet->id ? 'bg-indigo-600' : 'bg-gray-100' }}">
+                                                                                            {{ $selectedOutletId == $outlet->id ? 'bg-indigo-600' : 'bg-gray-100' }}">
                                                     <span
                                                         class="text-xs font-black {{ $selectedOutletId == $outlet->id ? 'text-white' : 'text-gray-500' }}">
                                                         {{ substr($outlet->name, 0, 1) }}

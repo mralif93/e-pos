@@ -14,6 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'pos.lock.check' => \App\Http\Middleware\CheckPosLock::class,
+            'outlet.session' => \App\Http\Middleware\SetActiveOutlet::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

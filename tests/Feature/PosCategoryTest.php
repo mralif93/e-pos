@@ -34,14 +34,21 @@ class PosCategoryTest extends TestCase
 
     public function test_can_fetch_categories()
     {
-        Category::create(['name' => 'Coffee', 'slug' => 'coffee', 'sort_order' => 1]);
-        Category::create(['name' => 'Food', 'slug' => 'food', 'sort_order' => 2]);
+        $cat1 = Category::create(['name' => 'Coffee', 'slug' => 'coffee', 'sort_order' => 1]);
+        $cat2 = Category::create(['name' => 'Food', 'slug' => 'food', 'sort_order' => 2]);
+
+        // API only returns categories with active products + prices for the outlet
+        $p1 = Product::create(['category_id' => $cat1->id, 'name' => 'P1', 'slug' => 'p1', 'price' => 10, 'is_active' => true]);
+        $p2 = Product::create(['category_id' => $cat2->id, 'name' => 'P2', 'slug' => 'p2', 'price' => 20, 'is_active' => true]);
+
+        ProductOutletPrice::create(['product_id' => $p1->id, 'outlet_id' => $this->outlet->id, 'price' => 10]);
+        ProductOutletPrice::create(['product_id' => $p2->id, 'outlet_id' => $this->outlet->id, 'price' => 20]);
 
         $response = $this->actingAs($this->user)
-            ->getJson(route('api.pos.categories'));
+            ->getJson(route('api.v1.pos.categories'));
 
         $response->assertStatus(200)
-            ->assertJsonCount(2)
+            ->assertJsonCount(2, 'data')
             ->assertJsonFragment(['name' => 'Coffee']);
     }
 
@@ -71,10 +78,10 @@ class PosCategoryTest extends TestCase
 
         // Filter by Category 1
         $response = $this->actingAs($this->user)
-            ->getJson(route('api.pos.products', ['category_id' => $category1->id]));
+            ->getJson(route('api.v1.pos.products', ['category_id' => $category1->id]));
 
         $response->assertStatus(200)
-            ->assertJsonCount(1)
+            ->assertJsonCount(1, 'data')
             ->assertJsonFragment(['name' => 'Latte'])
             ->assertJsonMissing(['name' => 'Sandwich']);
     }

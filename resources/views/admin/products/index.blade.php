@@ -24,11 +24,23 @@
                     </div>
 
                     <!-- Column 2: Filters & Actions -->
-                    <div class="flex flex-wrap items-center gap-4">
-                        <div class="flex-1 min-w-[140px]">
+                    <div class="flex flex-wrap items-center gap-3">
+                        <div class="flex-1 min-w-[130px]">
+                            <select name="outlet_id"
+                                class="w-full px-3 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 text-sm bg-white transition-all cursor-pointer hover:bg-gray-50">
+                                <option value="">All Outlets</option>
+                                @foreach($outlets as $outlet)
+                                    <option value="{{ $outlet->id }}" {{ request('outlet_id') == $outlet->id ? 'selected' : '' }}>
+                                        {{ $outlet->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="flex-1 min-w-[130px]">
                             <select name="category_id"
-                                class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 text-sm bg-white transition-all cursor-pointer hover:bg-gray-50">
-                                <option value="">Category</option>
+                                class="w-full px-3 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 text-sm bg-white transition-all cursor-pointer hover:bg-gray-50">
+                                <option value="">All Categories</option>
                                 @foreach($categories as $category)
                                     <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>
                                         {{ $category->name }}
@@ -37,22 +49,21 @@
                             </select>
                         </div>
 
-                        <div class="flex-1 min-w-[120px]">
+                        <div class="flex-1 min-w-[110px]">
                             <select name="status"
-                                class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 text-sm bg-white transition-all cursor-pointer hover:bg-gray-50">
-                                <option value="">Status</option>
+                                class="w-full px-3 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 text-sm bg-white transition-all cursor-pointer hover:bg-gray-50">
+                                <option value="">All Status</option>
                                 <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Active</option>
                                 <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>Inactive</option>
                             </select>
                         </div>
 
                         <div class="flex gap-2">
-                            <a href="{{ route('admin.products.index') }}"
-                                class="btn btn-ghost btn-sm">
+                            <a href="{{ route('admin.products.index') }}" class="inline-flex items-center justify-center gap-1.5 rounded-lg text-sm font-medium transition-all active:scale-95 border focus:outline-none px-4 py-0.5 bg-transparent text-gray-600 border-gray-200 hover:bg-gray-100">
                                 <i class="hgi-stroke text-[20px] hgi-setup-01"></i>
                                 Reset
                             </a>
-                            <button type="submit" class="btn btn-primary btn-sm">
+                            <button type="submit" class="inline-flex items-center justify-center gap-1.5 rounded-lg text-sm font-medium transition-all active:scale-95 border focus:outline-none px-4 py-0.5 bg-indigo-600 text-white border-indigo-600 hover:bg-indigo-700 shadow-sm shadow-indigo-200">
                                 <i class="hgi-stroke text-[20px] hgi-filter"></i>
                                 Filter
                             </button>
@@ -65,7 +76,7 @@
 
     <!-- Create Button -->
     <div class="flex justify-end mb-4">
-        <a href="{{ route('admin.products.create') }}" class="btn btn-primary">
+        <a href="{{ route('admin.products.create') }}" class="inline-flex items-center justify-center gap-1.5 rounded-lg text-sm font-medium transition-all active:scale-95 border focus:outline-none px-4 py-0.5 bg-indigo-600 text-white border-indigo-600 hover:bg-indigo-700 shadow-sm shadow-indigo-200">
             <i class="hgi-stroke text-[20px] hgi-add-01"></i>
             Add Product
         </a>
@@ -107,8 +118,8 @@
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Product</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">SKU</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Category</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Price</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Stock</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Outlets</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Base Price</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
                     <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Actions</th>
                 </tr>
@@ -118,21 +129,61 @@
                     <tr class="hover:bg-gray-50">
                         <td class="px-6 py-4">
                             <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center shrink-0">
+                                <div class="w-9 h-9 bg-indigo-100 rounded-xl flex items-center justify-center shrink-0">
                                     <i class="hgi-stroke text-[16px] hgi-package text-indigo-600"></i>
                                 </div>
-                                <span class="text-sm font-medium text-gray-900">{{ $product->name }}</span>
+                                <div>
+                                    <p class="text-sm font-semibold text-gray-900">{{ $product->name }}</p>
+                                    <p class="text-xs text-gray-400">{{ $product->sku }}</p>
+                                </div>
                             </div>
                         </td>
-                        <td class="px-6 py-4 text-sm text-gray-600">{{ $product->sku }}</td>
-                        <td class="px-6 py-4 text-sm text-gray-600">{{ $product->category->name ?? '-' }}</td>
-                        <td class="px-6 py-4 text-sm font-medium text-gray-800">RM {{ number_format($product->price, 2) }}</td>
-                        <td class="px-6 py-4 text-sm text-gray-600">{{ $product->stock_level }}</td>
+                        <td class="px-6 py-4 text-xs text-gray-400 font-mono">{{ $product->sku }}</td>
+                        <td class="px-6 py-4">
+                            @if($product->category)
+                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-indigo-50 text-indigo-700">
+                                    {{ $product->category->name }}
+                                </span>
+                            @else
+                                <span class="text-gray-400 text-xs">—</span>
+                            @endif
+                        </td>
+                        <td class="px-6 py-4">
+                            @if(request('outlet_id'))
+                                {{-- Filtered by outlet: show ONLY that outlet's stock & price --}}
+                                @php $op = $product->prices->where('outlet_id', request('outlet_id'))->first(); @endphp
+                                @if($op)
+                                    <div class="space-y-0.5">
+                                        <div class="flex items-center gap-1.5">
+                                            <span class="w-2 h-2 rounded-full {{ ($op->stock_level ?? 0) > 10 ? 'bg-emerald-400' : 'bg-rose-400' }}"></span>
+                                            <span class="text-xs font-semibold text-gray-700">Stock: {{ $op->stock_level ?? 0 }}</span>
+                                        </div>
+                                        <p class="text-[11px] text-gray-400">RM {{ number_format($op->price, 2) }}</p>
+                                    </div>
+                                @else
+                                    <span class="text-xs text-gray-400">—</span>
+                                @endif
+                            @else
+                                {{-- No filter: show count pill + short list --}}
+                                @php $count = $product->prices->count(); @endphp
+                                <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-slate-100 text-slate-600 rounded-full text-[11px] font-medium max-w-full truncate">
+                                    <i class="hgi-stroke hgi-store-01 text-[12px] shrink-0"></i>
+                                    <span class="truncate">
+                                        @if($count === 1)
+                                            {{ $product->prices->first()->outlet->name ?? '1 outlet' }}
+                                        @else
+                                            {{ $count }} outlets
+                                        @endif
+                                    </span>
+                                </span>
+                            @endif
+                        </td>
+                        <td class="px-6 py-4 text-sm font-semibold text-gray-800">RM {{ number_format($product->price, 2) }}</td>
                         <td class="px-6 py-4">
                             @if($product->is_active)
-                                <span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-700">Active</span>
+                                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-emerald-50 text-emerald-700">Active</span>
                             @else
-                                <span class="px-2 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-700">Inactive</span>
+                                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-500">Inactive</span>
                             @endif
                         </td>
                         <td class="px-6 py-4 text-right">
@@ -187,18 +238,18 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Product Name</label>
                         <input type="text" id="product_name" required
-                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                            class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-sm outline-none">
                     </div>
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">SKU</label>
                             <input type="text" id="product_sku" required
-                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                                class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-sm outline-none">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Category</label>
                             <select id="product_category" required
-                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                                class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-sm outline-none">
                                 @foreach($categories as $category)
                                     <option value="{{ $category->id }}">{{ $category->name }}</option>
                                 @endforeach
@@ -209,19 +260,19 @@
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Price (RM)</label>
                             <input type="number" id="product_price" step="0.01" required
-                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                                class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-sm outline-none">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Stock Level</label>
                             <input type="number" id="product_stock" required
-                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                                class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-sm outline-none">
                         </div>
                     </div>
                     <div class="flex gap-3 pt-4">
                         <button type="button" onclick="closeProductModal()"
-                            class="btn btn-secondary flex-1">Cancel</button>
+                            class="inline-flex items-center justify-center gap-1.5 rounded-lg text-sm font-medium transition-all active:scale-95 border focus:outline-none px-4 py-0.5 bg-white text-gray-700 border-gray-300 hover:bg-gray-50 shadow-sm flex-1">Cancel</button>
                         <button type="submit"
-                            class="btn btn-primary flex-1">Save</button>
+                            class="inline-flex items-center justify-center gap-1.5 rounded-lg text-sm font-medium transition-all active:scale-95 border focus:outline-none px-4 py-0.5 bg-indigo-600 text-white border-indigo-600 hover:bg-indigo-700 shadow-sm shadow-indigo-200 flex-1">Save</button>
                     </div>
                 </form>
             </div>

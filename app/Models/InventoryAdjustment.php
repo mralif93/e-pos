@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Auth;
 
+use App\Actions\Inventory\RecordStockMovementAction;
+
 class InventoryAdjustment extends Model
 {
     protected $fillable = [
@@ -51,16 +53,18 @@ class InventoryAdjustment extends Model
         ?int $userId = null
     ): self {
         $quantityBefore = $product->stock_level;
-        $quantityAfter = match ($type) {
-            'add' => $quantityBefore + $quantityChanged,
-            'remove', 'damage', 'loss' => $quantityBefore - abs($quantityChanged),
-            'set' => $quantityChanged,
-            'return' => $quantityBefore + abs($quantityChanged),
-            'correction' => $quantityBefore + $quantityChanged,
-            default => $quantityBefore,
-        };
 
-        $product->update(['stock_level' => max(0, $quantityAfter)]);
+        // Use the central RecordStockMovementAction for consistent updates
+        $stockAction = new RecordStockMovementAction();
+        $ledgerEntry = $stockAction->execute(
+            product: $product,
+            quantity: (float) $quantityChanged,
+            type: strtoupper($type),
+            outletId: $outletId,
+            notes: "Adjustment: {$reason}"
+        );
+
+        $quantityAfter = $quantityBefore + $quantityChanged;
 
         return static::create([
             'product_id' => $product->id,

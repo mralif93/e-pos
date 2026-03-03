@@ -5,10 +5,24 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Customer extends Model
 {
-    protected $fillable = ['name', 'phone', 'email', 'created_by', 'loyalty_points', 'total_points_earned', 'loyalty_tier', 'points_expiry_date'];
+    use HasUuids, HasFactory;
+
+    /**
+     * Get the columns that should receive a unique identifier.
+     *
+     * @return array<int, string>
+     */
+    public function uniqueIds(): array
+    {
+        return ['uuid'];
+    }
+
+    protected $fillable = ['uuid', 'name', 'phone', 'email', 'created_by', 'loyalty_points', 'total_points_earned', 'loyalty_tier', 'points_expiry_date'];
 
     protected $casts = [
         'points_expiry_date' => 'date',

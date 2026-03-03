@@ -49,7 +49,7 @@ class ModifierTest extends TestCase
         ]);
 
         $response = $this->actingAs($user)
-            ->getJson(route('api.pos.products'));
+            ->getJson(route('api.v1.pos.products'));
 
         $response->assertStatus(200)
             ->assertJsonFragment(['name' => 'Latte'])
