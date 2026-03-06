@@ -1,93 +1,116 @@
-# e-POS Terminal
+# e-POS Terminal: Premium Point-of-Sale Solution
 
-A premium, high-performance Point of Sale (POS) system built with **Laravel 11**, **Livewire**, **Alpine.js**, and **Tailwind CSS**. Designed for speed, reliability, and a professional user experience.
-
-![POS Preview](https://github.com/mralif93/e-pos-management-system/raw/main/public/assets/preview.png) *(Placeholder for your actual preview image)*
-
-## 🚀 Key Features
-
-### 💻 Modern POS Interface
-- **Redesigned Cart & Checkout**: Polished two-column layout with intuitive controls.
-- **Dynamic Theming**: Multi-outlet theme support (Indigo, Orange, Rose, etc.) with consistent branding.
-- **Shift Management**: Full shift lifecycle management (Open Shift with float, Close Shift with Manager PIN).
-- **Smooth Interactions**: Powered by Alpine.js and SweetAlert2 for a responsive, desktop-like feel.
-
-### 🔌 API-First Architecture
-- **Versioned API (v1)**: Robust API layer for POS operations, customer management, and reporting.
-- **Domain Driven Design**: Clean project structure with `Domains/`, `Repositories/`, and `Services/`.
-- **Offline Ready**: Draft system for handling intermittent connectivity.
-
-### 📊 Business Intelligence & Controls
-- **Audit Logging**: Comprehensive activity tracking for all critical user actions.
-- **Stock Ledger**: Detailed history of inventory movements and adjustments.
-- **User Roles**: Granular access control for Admins, Managers, and Cashiers.
+A high-performance, enterprise-grade Point of Sale (POS) system built on **Laravel 11**, designed for multi-outlet retail environments. This system features a reactive frontend, API-first architecture, and advanced inventory controls with full tax compliance.
 
 ---
 
-## 🛠 Technology Stack
+## 🚀 Key Modules & Capabilities
 
-- **Framework**: Laravel 11.x
-- **Frontend**: Livewire 3 (Reactive components)
-- **Interactivity**: Alpine.js (Lightweight JS framework)
-- **Styling**: Tailwind CSS (Utility-first CSS)
-- **Build Tool**: Vite
-- **Database**: SQLite (Default) / MySQL / PostgreSQL
+### 💻 Point of Sale (POS) Terminal
+- **Reactive Interface**: Built with Livewire 3 and Alpine.js for a desktop-class experience.
+- **Smart Catalog**: Real-time searching, barcode scanning, and category-based navigation.
+- **Flexible Checkout**: supports multiple payment methods (Cash, Card, DuitNow QR) and split payments.
+- **Offline Reliability**: Local draft storage with automatic background synchronization.
+- **Hardware Ready**: Direct thermal printing (ESC/POS) and cash drawer integration.
+
+### 🏪 Multi-Outlet Infrastructure
+- **Data Isolation**: Strict scoping of users, sales, and inventory data per business location.
+- **Outlet Customization**: Independent branding, receipt headers, and printer configurations.
+- **Admin Visibility**: Global dashboard for Super Admins to monitor performance across all locations.
+
+### 🧾 LHDN MyInvois & Compliance
+- **E-Invoicing**: Automatic generation and submission to the Malaysian LHDN MyInvois API.
+- **Compliance Ready**: SST support, zero-rated handling, and mandatory QR codes for validation.
+- **Audit Trails**: Detailed logs for every financial transaction and sensitive management action.
+
+### � Inventory & Stock Control
+- **Real-Time Tracking**: Every sale instantly updates stock levels across outlets.
+- **Valuation Methods**: Support for **FIFO** (First-In, First-Out) and **AVCO** (Average Cost) methods.
+- **Stock Ledger**: Complete movement history for every SKU (Stock Keeping Unit).
 
 ---
 
-## 📦 Installation & Setup
+## 🛠 Technical Architecture
 
-### 1. Requirements
-- PHP 8.2+
-- Composer
-- Node.js & NPM
+- **Backend**: Laravel 11.x (PHP 8.2+)
+- **Architecture**: Domain-Driven Design (DDD) with a clean `Domains/` layer.
+- **Patterns**: Action Pattern (Service Classes), Repository Pattern, and DTOs.
+- **API First**: Versioned API (v1) powering the core POS logic (Ready for Mobile/Kiosk).
+- **Frontend**: Tailwind CSS v4, Livewire v3, Alpine.js.
 
-### 2. Initialization
+---
+
+## 📦 Installation & Setup Guide
+
+### 1. Prerequisites
+Ensure your development environment meets these requirements:
+- **PHP**: 8.2 or higher
+- **Composer**: Latest version
+- **Node.js**: 20.x or higher
+- **Extension**: SQLite, GD, BCMath, Ctype, Fileinfo, JSON, Mbstring, OpenSSL, PDO, Tokenizer, XML.
+
+### 2. Initial Setup
 ```bash
 # Clone the repository
 git clone https://github.com/mralif93/e-pos.git
 cd e-pos
 
-# Install dependencies
+# Install backend & frontend dependencies
 composer install
 npm install
 
-# Setup environment
+# Configure environment
 cp .env.example .env
 php artisan key:generate
+```
 
-# Build SQLite database (if using default)
+### 3. Database & Seeding
+By default, the system uses SQLite. To initialize:
+```bash
+# Create the database file (Windows: use Explorer, Mac/Linux: use touch)
 touch database/database.sqlite
+
+# Run migrations and seed the system with demo data
 php artisan migrate --seed
 ```
 
-### 3. Build & Run
+### 4. Build Assets
+Run the production build to compile Tailwind CSS and JavaScript. This project uses a **Tailwind Safelist** to ensure dynamic theme colors render correctly.
 ```bash
-# Compile assets (Tailwind Safelist enabled)
 npm run build
-
-# Start the server
-php artisan serve
 ```
 
 ---
 
-## 📖 Related Documentation
+## ⚙️ Environment Configuration
 
-Detailed technical guides are available in the `documentation/` directory:
-- [API Architecture](documentation/API_FIRST_ARCHITECTURE.md)
-- [Environment Configuration](documentation/ENV_CONFIGURATION.md)
-- [Project Roadmap](documentation/PROJECT_IMPROVEMENT_ROADMAP.md)
+| Variable | Default | Description |
+| :--- | :--- | :--- |
+| `DB_CONNECTION` | `sqlite` | Database driver |
+| `LOYALTY_POINTS_PER_RINGGIT` | `1` | Earning rate for loyalty program |
+| `ENABLE_AUDIT_LOGGING` | `true` | Toggle manager audit trail |
+| `INVENTORY_VALUATION_METHOD` | `FIFO` | `FIFO` or `AVCO` |
+| `LHDN_PRODUCTION` | `false` | LHDN MyInvois Sandbox/Prod toggle |
 
 ---
 
-## 🧪 Testing & Development
+## 📖 Available Documentation Guides
 
-- **Run Tests**: `php artisan test`
-- **Quality Control**: `./vendor/bin/pint` (Laravel Pint linter)
-- **Vite Dev Server**: `npm run dev`
+For more specific information, check the `documentation/` folder:
+- [API Architecture Guide](documentation/API_FIRST_ARCHITECTURE.md)
+- [Environment Variable Reference](documentation/ENV_CONFIGURATION.md)
+- [Improvement Roadmap](documentation/PROJECT_IMPROVEMENT_ROADMAP.md)
+
+---
+
+## 🧪 Testing
+We maintain a suite of Feature and Unit tests focusing on financial accuracy and stock logic.
+```bash
+# Run the test suite
+php artisan test
+```
 
 ---
 
 ## 📄 License
-The e-POS system is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This system is open-source software licensed under the [MIT license](https://opensource.org/licenses/MIT).
