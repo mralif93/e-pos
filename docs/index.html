@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>e-POS Terminal | Premium Multi-Outlet POS Solution</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .bg-mesh {
+            background-color: #0f172a;
+            background-image:
+                radial-gradient(at 0% 0%, rgba(79, 70, 229, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(139, 92, 246, 0.1) 0px, transparent 50%);
+        }
+    </style>
+</head>
+
+<body class="bg-[#0b0f1a] text-gray-300 antialiased overflow-x-hidden">
+
+    <!-- Navbar -->
+    <nav class="fixed top-0 w-full z-50 border-b border-white/5 bg-[#0b0f1a]/80 backdrop-blur-xl">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div
+                    class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-violet-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/20">
+                    <i data-lucide="shopping-cart" class="text-white w-5 h-5"></i>
+                </div>
+                <span class="text-xl font-extrabold text-white tracking-tight">e-POS <span
+                        class="text-indigo-400">Terminal</span></span>
+            </div>
+            <div class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-400">
+                <a href="#features" class="hover:text-white transition-colors">Features</a>
+                <a href="#tech" class="hover:text-white transition-colors">Technology</a>
+                <a href="#setup" class="hover:text-white transition-colors">Get Started</a>
+            </div>
+            <div>
+                <a href="https://github.com/mralif93/e-pos"
+                    class="px-5 py-2.5 bg-white/5 hover:bg-white/10 rounded-full border border-white/10 text-white text-sm font-semibold transition-all flex items-center gap-2">
+                    <i data-lucide="github" class="w-4 h-4"></i>
+                    GitHub
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative pt-40 pb-20 overflow-hidden bg-mesh">
+        <div class="max-w-7xl mx-auto px-6 text-center lg:text-left grid lg:grid-cols-2 gap-12 items-center">
+            <div class="space-y-8 relative z-10">
+                <div
+                    class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-bold uppercase tracking-widest">
+                    <span class="relative flex h-2 w-2">
+                        <span
+                            class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
+                    </span>
+                    Now with LHDN MyInvois Support
+                </div>
+                <h1 class="text-5xl lg:text-7xl font-[800] text-white leading-[1.1] tracking-tight">
+                    Next-Gen POS <br /> For <span
+                        class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-violet-400">Modern
+                        Retail</span>
+                </h1>
+                <p class="text-lg text-gray-400 max-w-xl mx-auto lg:mx-0 leading-relaxed">
+                    A premium, high-performance Point of Sale system built for speed, compliance, and multi-outlet
+                    scale. Managed with Laravel 11 and a lightning-fast reactive UI.
+                </p>
+                <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-4">
+                    <a href="#setup"
+                        class="w-full sm:w-auto px-8 py-4 bg-indigo-600 hover:bg-indigo-500 text-white rounded-2xl font-bold shadow-2xl shadow-indigo-600/30 transition-all hover:-translate-y-1">
+                        Start Building
+                    </a>
+                    <a href="https://github.com/mralif93/e-pos"
+                        class="w-full sm:w-auto px-8 py-4 glass hover:bg-white/10 text-white rounded-2xl font-bold transition-all">
+                        View Source
+                    </a>
+                </div>
+            </div>
+            <div class="relative">
+                <div class="absolute inset-0 bg-indigo-500/20 blur-[100px] -z-10 rounded-full"></div>
+                <div class="glass p-3 rounded-[2.5rem] shadow-2xl shadow-black/50 overflow-hidden">
+                    <img src="assets/hero.png" alt="POS Dashboard Preview" class="rounded-[2rem] w-full">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-32 bg-[#0b0f1a]">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center space-y-4 mb-20">
+                <h2 class="text-3xl md:text-5xl font-extrabold text-white">Powering Your <span
+                        class="text-indigo-400">Growth</span></h2>
+                <p class="text-gray-400 text-lg max-w-2xl mx-auto">Everything you need to manage multiple outlets,
+                    inventory, and Malaysian tax compliance in one cohesive platform.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- POS Terminal -->
+                <div class="glass p-10 rounded-3xl hover:border-indigo-500/30 transition-all group">
+                    <div
+                        class="w-14 h-14 bg-indigo-500/10 rounded-2xl flex items-center justify-center mb-8 group-hover:bg-indigo-500 transition-colors">
+                        <i data-lucide="layout" class="text-indigo-400 w-6 h-6 group-hover:text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-4">Modern POS UI</h3>
+                    <p class="text-gray-400 leading-relaxed">Reactive interface with real-time cart, splits, and offline
+                        sync powered by Livewire 3 & Alpine.js.</p>
+                </div>
+
+                <!-- Multi-Outlet -->
+                <div class="glass p-10 rounded-3xl hover:border- violet-500/30 transition-all group">
+                    <div
+                        class="w-14 h-14 bg-violet-500/10 rounded-2xl flex items-center justify-center mb-8 group-hover:bg-violet-500 transition-colors">
+                        <i data-lucide="layers" class="text-violet-400 w-6 h-6 group-hover:text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-4">Multi-Outlet Management</h3>
+                    <p class="text-gray-400 leading-relaxed">Centralized control with data isolation, outlet-specific
+                        pricing, and global admin visibility.</p>
+                </div>
+
+                <!-- LHDN Compliance -->
+                <div class="glass p-10 rounded-3xl hover:border-emerald-500/30 transition-all group">
+                    <div
+                        class="w-14 h-14 bg-emerald-500/10 rounded-2xl flex items-center justify-center mb-8 group-hover:bg-emerald-500 transition-colors">
+                        <i data-lucide="shield-check" class="text-emerald-400 w-6 h-6 group-hover:text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-4">E-Invoicing Ready</h3>
+                    <p class="text-gray-400 leading-relaxed">Full LHDN MyInvois integration for Malaysian tax compliance
+                        including QR verification.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tech Stack -->
+    <section id="tech" class="py-32 bg-mesh border-y border-white/5">
+        <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-20 items-center">
+            <div class="space-y-10">
+                <h2 class="text-4xl font-extrabold text-white leading-tight">Built on the <br /> <span
+                        class="text-indigo-400">Industry Standard</span></h2>
+                <p class="text-lg text-gray-400 leading-relaxed">We chose a stack that prioritizes developer
+                    productivity without compromising on enterprise-grade performance.</p>
+
+                <div class="grid grid-cols-2 gap-6">
+                    <div class="flex items-center gap-4 text-white font-semibold">
+                        <div class="w-2 h-2 rounded-full bg-indigo-500"></div> Laravel 11.x
+                    </div>
+                    <div class="flex items-center gap-4 text-white font-semibold">
+                        <div class="w-2 h-2 rounded-full bg-indigo-500"></div> Livewire 3
+                    </div>
+                    <div class="flex items-center gap-4 text-white font-semibold">
+                        <div class="w-2 h-2 rounded-full bg-indigo-500"></div> Tailwind CSS v4
+                    </div>
+                    <div class="flex items-center gap-4 text-white font-semibold">
+                        <div class="w-2 h-2 rounded-full bg-indigo-500"></div> Alpine.js
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-4">
+                <div class="glass p-8 rounded-3xl border-l-4 border-l-indigo-500">
+                    <h4 class="text-white font-bold mb-2">API-First Architecture</h4>
+                    <p class="text-sm text-gray-400">Power web, mobile, and kiosk terminals from a single versioned API
+                        layer.</p>
+                </div>
+                <div class="glass p-8 rounded-3xl border-l-4 border-l-violet-500">
+                    <h4 class="text-white font-bold mb-2">Domain Driven Design</h4>
+                    <p class="text-sm text-gray-400">Maintainable codebase organized by business domains: Sales,
+                        Inventory, Customers.</p>
+                </div>
+                <div class="glass p-8 rounded-3xl border-l-4 border-l-emerald-500">
+                    <h4 class="text-white font-bold mb-2">Stock Ledger & Valuation</h4>
+                    <p class="text-sm text-gray-400">Automated FIFO and AVCO cost tracking for precise financial
+                        reporting.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Setup Guide -->
+    <section id="setup" class="py-32 bg-[#0b0f1a]">
+        <div class="max-w-4xl mx-auto px-6">
+            <div class="text-center space-y-4 mb-16">
+                <h2 class="text-4xl font-extrabold text-white">Setup in <span class="text-indigo-400">Minutes</span>
+                </h2>
+                <p class="text-gray-400 font-medium">Get your environment up and running with a few simple commands.</p>
+            </div>
+
+            <div class="bg-black/50 border border-white/10 rounded-[2rem] p-8 md:p-12 overflow-hidden relative group">
+                <div class="absolute top-0 right-0 p-6 opacity-20 group-hover:opacity-100 transition-opacity">
+                    <i data-lucide="copy" class="w-5 h-5 cursor-pointer"></i>
+                </div>
+                <pre class="text-sm md:text-base font-mono leading-relaxed overflow-x-auto"><span class="text-indigo-400"># Clone & Install</span>
+git clone https://github.com/mralif93/e-pos.git
+cd e-pos
+composer install && npm install
+
+<span class="text-indigo-400"># Setup Environment</span>
+cp .env.example .env
+php artisan key:generate
+
+<span class="text-indigo-400"># Database initialization</span>
+touch database/database.sqlite
+php artisan migrate --seed
+
+<span class="text-indigo-400"># Build & Serve</span>
+npm run build
+php artisan serve</pre>
+            </div>
+
+            <div class="mt-12 text-center">
+                <p class="text-gray-500 text-sm">Need more details? Check the <a
+                        href="https://github.com/mralif93/e-pos/blob/main/README.md"
+                        class="text-indigo-400 border-b border-indigo-400/30 hover:border-indigo-400 transition-all">Full
+                        Documentation</a></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-20 border-t border-white/5 bg-[#0b0f1a]">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-8">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 bg-indigo-500/10 rounded-xl flex items-center justify-center">
+                    <i data-lucide="shopping-cart" class="text-indigo-400 w-4 h-4"></i>
+                </div>
+                <span class="text-lg font-bold text-white tracking-tight">e-POS <span
+                        class="text-indigo-400 font-medium tracking-normal text-sm ml-1">v1.2</span></span>
+            </div>
+            <p class="text-gray-500 text-sm">© 2026 e-POS Terminal. Open source under MIT License.</p>
+            <div class="flex items-center gap-6">
+                <a href="https://github.com/mralif93/e-pos" class="text-gray-400 hover:text-white transition-colors"><i
+                        data-lucide="github" class="w-5 h-5"></i></a>
+                <a href="#" class="text-gray-400 hover:text-white transition-colors"><i data-lucide="twitter"
+                        class="w-5 h-5"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>
