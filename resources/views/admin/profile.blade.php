@@ -16,30 +16,55 @@
         @endif
 
         {{-- Profile Header Card --}}
-        <div class="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
-            <div class="h-20 bg-gradient-to-r from-indigo-600 to-violet-600"></div>
-            <div class="px-6 pb-6 -mt-8 flex items-end gap-4">
-                <div
-                    class="w-16 h-16 rounded-2xl bg-white border-4 border-white shadow-md flex items-center justify-center">
-                    <span class="text-2xl font-black text-indigo-600">{{ substr(Auth::user()->name, 0, 1) }}</span>
-                </div>
-                <div class="pb-1 flex-1 min-w-0">
-                    <h2 class="text-xl font-bold text-gray-900 truncate">{{ Auth::user()->name }}</h2>
-                    <div class="flex items-center gap-2 flex-wrap mt-1">
+        <div
+            class="bg-gradient-to-r from-indigo-600 to-violet-600 rounded-3xl shadow-xl shadow-indigo-100 p-8 relative overflow-hidden group">
+            {{-- Decorative Pattern --}}
+            <div
+                class="absolute -top-12 -right-12 w-64 h-64 bg-white/10 rounded-full blur-3xl transition-transform group-hover:scale-110 duration-700">
+            </div>
+            <div
+                class="absolute -bottom-12 -left-12 w-48 h-48 bg-white/5 rounded-full blur-2xl transition-transform group-hover:scale-110 duration-700">
+            </div>
+
+            <div class="relative flex flex-col md:flex-row items-center md:items-start gap-6 text-center md:text-left">
+                <div class="shrink-0">
+                    <div
+                        class="w-24 h-24 rounded-3xl bg-white/20 backdrop-blur-md border border-white/30 shadow-2xl flex items-center justify-center ring-4 ring-white/10 group-hover:scale-105 transition-transform duration-300">
                         <span
-                            class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-indigo-100 text-indigo-700 capitalize">
-                            {{ Auth::user()->role ?? 'Admin' }}
-                        </span>
-                        @if(Auth::user()->outlet)
-                            <span
-                                class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600 flex items-center gap-1">
-                                <i class="hgi-stroke hgi-store-01 text-xs"></i> {{ Auth::user()->outlet->name }}
-                            </span>
-                        @endif
-                        @if(Auth::user()->staff_id)
-                            <span class="text-xs text-gray-400">ID: {{ Auth::user()->staff_id }}</span>
-                        @endif
+                            class="text-4xl font-black text-white drop-shadow-sm">{{ substr(Auth::user()->name, 0, 1) }}</span>
                     </div>
+                </div>
+
+                <div class="flex-1 space-y-3">
+                    <div>
+                        <h2 class="text-3xl font-extrabold text-white tracking-tight drop-shadow-sm">
+                            {{ Auth::user()->name }}</h2>
+                        <div class="flex flex-wrap items-center justify-center md:justify-start gap-2 mt-2">
+                            <span
+                                class="px-3 py-1 rounded-full bg-white/15 backdrop-blur-sm border border-white/20 text-white text-xs font-bold uppercase tracking-wider">
+                                {{ Auth::user()->role ?? 'Admin' }}
+                            </span>
+                            @if(Auth::user()->staff_id)
+                                <span class="text-white/60 text-xs font-medium bg-black/10 px-3 py-1 rounded-full">ID:
+                                    {{ Auth::user()->staff_id }}</span>
+                            @endif
+                        </div>
+                    </div>
+
+                    @if(Auth::user()->outlet)
+                        <div class="flex flex-col gap-2 pt-2 border-t border-white/10">
+                            <div class="flex items-center justify-center md:justify-start gap-2 text-white/80">
+                                <i class="hgi-stroke hgi-store-01 text-sm"></i>
+                                <span class="text-sm font-semibold tracking-wide">{{ Auth::user()->outlet->name }}</span>
+                            </div>
+                            @if(Auth::user()->outlet->address)
+                                <div class="flex items-start justify-center md:justify-start gap-2 text-white/50">
+                                    <i class="hgi-stroke hgi-location-01 text-sm mt-0.5"></i>
+                                    <p class="text-xs leading-relaxed max-w-md line-clamp-1">{{ Auth::user()->outlet->address }}</p>
+                                </div>
+                            @endif
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
