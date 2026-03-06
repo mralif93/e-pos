@@ -21,9 +21,9 @@ class LHDNService
         $this->clientId = config('services.lhdn.client_id', '');
         $this->clientSecret = config('services.lhdn.client_secret', '');
         $this->mode = config('services.lhdn.mode', 'mock'); // 'mock', 'sandbox', 'production'
-        
-        $this->apiUrl = $this->mode === 'production' 
-            ? 'https://api.myinvois.hasil.gov.my/api/v1.0' 
+
+        $this->apiUrl = $this->mode === 'production'
+            ? 'https://api.myinvois.hasil.gov.my/api/v1.0'
             : 'https://preprod-api.myinvois.hasil.gov.my/api/v1.0';
     }
 
@@ -39,7 +39,7 @@ class LHDNService
         try {
             $accessToken = $this->getAccessToken();
             $xml = $this->generateUblXml($sale);
-            
+
             // 1. Save XML for record-keeping
             $xmlPath = "invoices/xml/{$sale->id}_" . time() . ".xml";
             Storage::disk('private')->put($xmlPath, $xml);
@@ -74,7 +74,7 @@ class LHDNService
 
         } catch (Exception $e) {
             Log::error("E-Invoice Submission Error for Sale #{$sale->id}: " . $e->getMessage());
-            
+
             return EInvoice::create([
                 'sale_id' => $sale->id,
                 'status' => 'failed',
@@ -113,7 +113,7 @@ class LHDNService
     {
         // This would typically use a library like 'numomaduro/laravel-ubl' 
         // or a custom XML builder according to LHDN SDK.
-        return "<?xml version="1.0" encoding="UTF-8"?><Invoice>...</Invoice>";
+        return '<?xml version="1.0" encoding="UTF-8"?><Invoice>...</Invoice>';
     }
 
     /**
@@ -122,7 +122,7 @@ class LHDNService
     protected function mockSubmission(Sale $sale): EInvoice
     {
         Log::info("MOCK: Submitting Sale #{$sale->id} to LHDN MyInvois.");
-        
+
         return EInvoice::create([
             'sale_id' => $sale->id,
             'lhdn_invoice_id' => 'LHDN-' . strtoupper(str_replace('-', '', $sale->uuid)),
