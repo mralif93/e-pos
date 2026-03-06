@@ -1,105 +1,93 @@
-# e-POS (Point of Sale System)
+# e-POS Terminal
 
-This is a Point of Sale (POS) system built with [Laravel](https://laravel.com). This guide will help you set up the project on your local machine.
+A premium, high-performance Point of Sale (POS) system built with **Laravel 11**, **Livewire**, **Alpine.js**, and **Tailwind CSS**. Designed for speed, reliability, and a professional user experience.
 
-## Prerequisites
+![POS Preview](https://github.com/mralif93/e-pos-management-system/raw/main/public/assets/preview.png) *(Placeholder for your actual preview image)*
 
-Before you begin, ensure you have the following installed on your machine:
+## 🚀 Key Features
 
--   [PHP](https://www.php.net/) (version 8.2 or higher)
--   [Composer](https://getcomposer.org/)
--   [Node.js](https://nodejs.org/) and NPM
+### 💻 Modern POS Interface
+- **Redesigned Cart & Checkout**: Polished two-column layout with intuitive controls.
+- **Dynamic Theming**: Multi-outlet theme support (Indigo, Orange, Rose, etc.) with consistent branding.
+- **Shift Management**: Full shift lifecycle management (Open Shift with float, Close Shift with Manager PIN).
+- **Smooth Interactions**: Powered by Alpine.js and SweetAlert2 for a responsive, desktop-like feel.
 
-## Installation
+### 🔌 API-First Architecture
+- **Versioned API (v1)**: Robust API layer for POS operations, customer management, and reporting.
+- **Domain Driven Design**: Clean project structure with `Domains/`, `Repositories/`, and `Services/`.
+- **Offline Ready**: Draft system for handling intermittent connectivity.
 
-Follow these steps to initialize the project:
+### 📊 Business Intelligence & Controls
+- **Audit Logging**: Comprehensive activity tracking for all critical user actions.
+- **Stock Ledger**: Detailed history of inventory movements and adjustments.
+- **User Roles**: Granular access control for Admins, Managers, and Cashiers.
 
-### 1. Clone the Repository
+---
 
-If you haven't already, ensure you have the project files locally.
+## 🛠 Technology Stack
 
-### 2. Install PHP Dependencies
+- **Framework**: Laravel 11.x
+- **Frontend**: Livewire 3 (Reactive components)
+- **Interactivity**: Alpine.js (Lightweight JS framework)
+- **Styling**: Tailwind CSS (Utility-first CSS)
+- **Build Tool**: Vite
+- **Database**: SQLite (Default) / MySQL / PostgreSQL
 
-Install the project's backend dependencies using Composer:
+---
 
+## 📦 Installation & Setup
+
+### 1. Requirements
+- PHP 8.2+
+- Composer
+- Node.js & NPM
+
+### 2. Initialization
 ```bash
+# Clone the repository
+git clone https://github.com/mralif93/e-pos.git
+cd e-pos
+
+# Install dependencies
 composer install
-```
-
-### 3. Environment Configuration
-
-Copy the example environment file to create your local `.env` file:
-
-```bash
-cp .env.example .env
-```
-
-Open the `.env` file and configure your environment variables, specifically the database connection. By default, it is configured to use SQLite:
-
-```ini
-DB_CONNECTION=sqlite
-# DB_HOST=127.0.0.1
-# DB_PORT=3306
-# ...
-```
-
-### 4. Generate Application Key
-
-Generate the unique application key for your instance:
-
-```bash
-php artisan key:generate
-```
-
-### 5. Run Database Migrations
-
-Create the necessary database tables (ensure your database file exists if using SQLite, usually `database/database.sqlite`):
-
-```bash
-# Create SQLite file if it doesn't exist (Mac/Linux)
-touch database/database.sqlite
-
-# Run migrations
-php artisan migrate
-```
-
-### 6. Install Frontend Dependencies
-
-Install the JavaScript dependencies:
-
-```bash
 npm install
+
+# Setup environment
+cp .env.example .env
+php artisan key:generate
+
+# Build SQLite database (if using default)
+touch database/database.sqlite
+php artisan migrate --seed
 ```
 
-### 7. Build Frontend Assets
-
-Compile the assets (Vite + Tailwind CSS):
-
+### 3. Build & Run
 ```bash
-# For development (hot module replacement)
-npm run dev
-
-# OR for production build
+# Compile assets (Tailwind Safelist enabled)
 npm run build
-```
 
-## Running the Application
-
-To start the local development server:
-
-```bash
+# Start the server
 php artisan serve
 ```
 
-The application will be accessible at `http://127.0.0.1:8000`.
+---
 
-## Additional Commands
+## 📖 Related Documentation
 
--   **Run Tests**:
-    ```bash
-    php artisan test
-    ```
--   **Run Linter**:
-    ```bash
-    ./vendor/bin/pint
-    ```
+Detailed technical guides are available in the `documentation/` directory:
+- [API Architecture](documentation/API_FIRST_ARCHITECTURE.md)
+- [Environment Configuration](documentation/ENV_CONFIGURATION.md)
+- [Project Roadmap](documentation/PROJECT_IMPROVEMENT_ROADMAP.md)
+
+---
+
+## 🧪 Testing & Development
+
+- **Run Tests**: `php artisan test`
+- **Quality Control**: `./vendor/bin/pint` (Laravel Pint linter)
+- **Vite Dev Server**: `npm run dev`
+
+---
+
+## 📄 License
+The e-POS system is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
